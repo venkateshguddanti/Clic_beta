@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:layout_marginTop="20dp"
+                android:visibility="gone"
+                >
+                <TextView
+                    android:id="@+id/txt_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Capture Location"
+                    android:paddingLeft="10dp"
+                    android:layout_margin="5dp"
+                    android:layout_centerInParent="true"
+                    style="@style/CodeFont"
+                    android:layout_alignParentLeft="true"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gpsLocationStatus"
+                    android:src="@drawable/no_update"
+                    android:layout_centerInParent="true"
+                    android:paddingRight="20dp"
+                    android:layout_alignTop="@+id/gpsLocation"
+                    android:layout_toLeftOf="@+id/gpsLocation"
+                    android:layout_toStartOf="@+id/gpsLocation" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gpsLocation"
+                    android:layout_margin="5dp"
+                    android:paddingRight="15dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@android:drawable/ic_menu_mylocation"
+
+                    />
+
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/layout_yrs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@android:color/white"
+                android:layout_marginTop="20dp"
+                >
+                <TextView
+                    android:id="@+id/txt_date_of_purchase"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Prefered Date"
+                    android:paddingLeft="10dp"
+                    android:layout_margin="5dp"
+                    style="@style/CodeFont"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentLeft="true"/>
+
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_date"
+                    android:text="Pick Date"
+                    android:layout_margin="5dp"
+                    style="@style/ClicButton"
+                    android:layout_alignParentRight="true"
+                    android:src="@android:drawable/ic_menu_set_as"
+
+                    />
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/layout_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@android:color/white"
+                android:layout_marginTop="20dp"
+                >
+                <TextView
+                    android:id="@+id/txt_time_of_purchase"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Prefered Time"
+                    android:paddingLeft="10dp"
+                    android:layout_margin="5dp"
+                    style="@style/CodeFont"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentLeft="true"/>
+
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_time"
+                    android:text="Pick Time"
+                    android:layout_margin="5dp"
+                    style="@style/ClicButton"
+                    android:layout_alignParentRight="true"
+                    android:src="@android:drawable/ic_menu_set_as"
+
+                    />
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/layout_itemAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@android:color/white"
+                android:layout_marginTop="10dp"
+                >
+                <CheckBox
+                    android:id="@+id/addressCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SameAddress"
+                    android:paddingLeft="10dp"
+                    style="@style/CodeFont"
+                    android:layout_margin="5dp"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentLeft="true"/>
+
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_ItemAddress"
+                    android:text="Address"
+                    android:layout_margin="5dp"
+                    android:layout_alignParentRight="true"
+                    style="@style/ClicButton"
+                    android:src="@android:drawable/ic_menu_set_as"
+
+                    />
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btn_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Request For Demo"
+                style="@style/ClicButton"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+    </ScrollView>
+
+
+</RelativeLayout>

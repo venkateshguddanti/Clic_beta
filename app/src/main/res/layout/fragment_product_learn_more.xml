@@ -1,0 +1,111 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.clic.org.serve.fragments.ProductLearnMoreFragment"
+    >
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <!--<VideoView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/videoView"
+        android:layout_margin="10dp"
+        android:layout_gravity="center" />-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_title"
+        android:text="Need Some Content to display"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/txt_title"
+        android:layout_above="@+id/txt_rating"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:nestedScrollingEnabled="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            > <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_description"
+            android:text="Two Cooling Systems What’s kept in the freezer should stay in the freezer. Exactly why, there are two separate cooling circuits for the fridge and freezer, so there is no odour mixing and the temperature can be controlled independently, keeping the freshness of the food intact and the smell of the food in place.\n
+
+Multi Airflow This one of a kind feature improves the circulation of air around, regulates the temperature and also eliminates all possibilities of condensation, making sure temperature is equally distributed to all the shelves. So, no matter where you keep the food, your fridge will keep it fresh, at all times.\n
+
+SuperFreezing SuperFreezing protects frozen food from defrosting when adding new food to the freezer, and the new food freezes faster. Appliances with an automatic freezing function return to normal operation once the required temperature is reached. This prevents energy waste."
+            style="@style/CodeFont"
+            android:layout_margin="10dp"
+            />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+     <TextView
+         android:id="@+id/txt_rating"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_margin="10dp"
+         android:layout_above="@+id/layout_rating"
+         android:text="Was the information helpfull?"
+         android:textStyle="bold"
+         android:textColor="@color/colorPrimary"/>
+    <RelativeLayout
+        android:id="@+id/layout_rating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@android:color/darker_gray"
+           android:layout_alignParentTop="true"/>
+        <ImageView
+            android:id="@+id/img_heplfull"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:src="@drawable/icn__like"
+            android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@+id/divider"
+            />
+        <TextView
+            android:id="@+id/divider"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_centerInParent="true"
+            android:background="@android:color/darker_gray"/>
+        <ImageView
+            android:id="@+id/img_helpless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icn__dislike"
+            android:layout_toRightOf="@+id/divider"
+            />
+    </RelativeLayout>
+
+
+
+</RelativeLayout>
