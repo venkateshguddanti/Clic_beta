@@ -181,8 +181,8 @@ public class ProductServiceScheduler extends Fragment implements View.OnClickLis
                 {
                     SERVICE_TYPE = ClicConstants.UPDATE_USER;
                     ClicUtils.updateCustomerDetails(getActivity(),
-                                            mServiceListener,
-                                             new Customer());
+                            mServiceListener,
+                            new Customer());
                    /* ServiceUtils.postJsonObjectRequest(getActivity(),
                             ServiceConstants.SERVICE_SCHEDULE, mServiceListener, JsonUtils.getJsonString(mServiceRequest));
 */
@@ -195,7 +195,10 @@ public class ProductServiceScheduler extends Fragment implements View.OnClickLis
                 break;
             case R.id.btn_date:
                 DialogFragment newFragment = new DatePickerFragment();
+                Bundle args = new Bundle();
+                args.putString("date", ClicConstants.DATE_TYPE_SCHEDULE);
                 newFragment.setTargetFragment(ProductServiceScheduler.this, DATEPICKER_FRAGMENT);
+                newFragment.setArguments(args);
                 newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
                 break;
             case R.id.btn_time:

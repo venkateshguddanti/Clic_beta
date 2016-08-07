@@ -12,6 +12,8 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.DatePicker;
 
+import com.clic.org.serve.constants.ClicConstants;
+
 import java.util.Calendar;
 
 /**
@@ -21,6 +23,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
 
     DateFromPickerListener mDateListener;
+    String type ;
 
 
     @NonNull
@@ -32,11 +35,19 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
+        type = getArguments().getString("date");
         mDateListener = (DateFromPickerListener)getTargetFragment();
-
-        // Create a new instance of DatePickerFragment and return
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),this,year,month,day);
-        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis()-1000);
+        DatePickerDialog datePickerDialog = null;
+        if(type.equalsIgnoreCase(ClicConstants.DATE_TYPE_SCHEDULE)) {
+            // Create a new instance of DatePickerFragment and return
+            datePickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        }
+        else
+        {
+            datePickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
+            datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() - 1000);
+        }
         return datePickerDialog;
     }
 
@@ -45,7 +56,8 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
-        mDateListener.getDataFromPicker(dayOfMonth + "-" + monthOfYear+1 + "-" + year);
+        int month = monthOfYear+1;
+        mDateListener.getDataFromPicker(dayOfMonth + "-" + month + "-" + year);
         Log.d("debug", "date" + dayOfMonth + "-" + monthOfYear + "-" + year);
 
     }

@@ -141,7 +141,10 @@ public class AddInvoiceFragment extends Fragment implements DatePickerFragment.D
                 break;
             case R.id.btn_date:
                 DialogFragment newFragment = new DatePickerFragment();
+                Bundle args = new Bundle();
+                args.putString("date", ClicConstants.DATE_TYPE_PURCHASE);
                 newFragment.setTargetFragment(AddInvoiceFragment.this, DATEPICKER_FRAGMENT);
+                newFragment.setArguments(args);
                 newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
                 break;
 

@@ -192,6 +192,8 @@ public class BaseActiivty extends AppCompatActivity{
 
                     }else {
                         ClicUtils.createPreferences(BaseActiivty.this, profiles.get(item-1).getSubcustomerId(), R.string.clic_ClientID);
+                        ClicUtils.createPreferences(BaseActiivty.this, sharedProfiles.getCustomerId(), R.string.clic_SharedClientID);
+
                     }
                     startHomeScreen();
 

@@ -50,4 +50,7 @@ public class ClicConstants {
 
     public static final String GUEST_USER = "guestUser";
     public static final String UPDATE_USER = "updateUser";
+
+    public static final String DATE_TYPE_PURCHASE = "datePurchase";
+    public static final String DATE_TYPE_SCHEDULE = "dateSchedule";
 }
