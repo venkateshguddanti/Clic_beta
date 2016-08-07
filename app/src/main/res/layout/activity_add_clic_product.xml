@@ -39,7 +39,7 @@
         android:layout_gravity="bottom|end"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        fab:fab_addButtonColorNormal="@color/btnbg"
+        fab:fab_addButtonColorNormal="@color/btnbg_transparant"
         fab:fab_addButtonColorPressed="@color/white_pressed"
         fab:fab_addButtonSize="normal"
         fab:fab_addButtonPlusIconColor="@color/half_black"
@@ -47,32 +47,6 @@
         fab:fab_labelStyle="@style/menu_labels_style"
         >
 
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_addproduct"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/white"
-            fab:fab_colorPressed="@color/white_pressed"
-            fab:fab_title="Add Product"
-            />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_knowmore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/white"
-            fab:fab_colorPressed="@color/white_pressed"
-            fab:fab_title="Call Back"/>
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_uploaddocs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/white"
-            fab:fab_title="Chat"
-            fab:fab_colorPressed="@color/white_pressed"
-            />
 
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>

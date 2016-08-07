@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,10 +61,13 @@ public class ProductInfoFragment extends Fragment implements View.OnClickListene
         txtYearOfPurchase = (TextView)view.findViewById(R.id.purchaseYear);
         warrantyStatus = (ImageView)view.findViewById(R.id.warrantyStatus);
         txtwarrantyStatus = (TextView)view.findViewById(R.id.txt_statusWarranty);
+        txtwarrantyStatus.setOnClickListener(this);
         insuranceStatus = (ImageView)view.findViewById(R.id.insuranceStatus);
         txtinsuranceStatus = (TextView)view.findViewById(R.id.txt_statusInsurance);
+        txtinsuranceStatus.setOnClickListener(this);
         invoiceStatus = (ImageView)view.findViewById(R.id.invoiceStatus);
         txtInvoiceStatus = (TextView)view.findViewById(R.id.txt_statusInvoce);
+        txtInvoiceStatus.setOnClickListener(this);
 
 
         invoiceStatus.setBackgroundResource(R.drawable.no_update);
@@ -72,7 +76,7 @@ public class ProductInfoFragment extends Fragment implements View.OnClickListene
 
 
         layoutViewInvoice = (RelativeLayout)view.findViewById(R.id.viewInvoice);
-      layoutViewInvoice.setOnClickListener(this);
+        layoutViewInvoice.setOnClickListener(this);
 
         txtModelName.setText(mUserItemsResponse.getCategoryName());
         txtModelNumber.setText(mUserItemsResponse.getModelNumber());
@@ -153,20 +157,41 @@ public class ProductInfoFragment extends Fragment implements View.OnClickListene
                 if(getItemDocument(mUserItemsResponse.getItemDocs(), ClicConstants.DOC_INSURENCE_VALUE) != null) {
                     ClicUtils.createImagePinchDialog(getActivity(), R.layout.pinch_zoom_image,
                             getItemDocument(mUserItemsResponse.getItemDocs(), ClicConstants.DOC_INSURENCE_VALUE).getFilePath() );
+                }else
+                {
+                   startUploadFragment();
                 }
                 break;
             case R.id.txt_statusInvoce:
                 if(getItemDocument(mUserItemsResponse.getItemDocs(), ClicConstants.DOC_INVOICE_VALUE) != null) {
                     ClicUtils.createImagePinchDialog(getActivity(), R.layout.pinch_zoom_image,
-                            getItemDocument(mUserItemsResponse.getItemDocs(), ClicConstants.DOC_INVOICE_VALUE).getFilePath() );
+                            getItemDocument(mUserItemsResponse.getItemDocs(), ClicConstants.DOC_INVOICE_VALUE).getFilePath());
+                }else
+                {
+                    startUploadFragment();
                 }
                 break;
             case R.id.txt_statusWarranty:
                 if(getItemDocument(mUserItemsResponse.getItemDocs(), ClicConstants.DOC_WARRANTY_VALUE) != null) {
                     ClicUtils.createImagePinchDialog(getActivity(), R.layout.pinch_zoom_image,
                             getItemDocument(mUserItemsResponse.getItemDocs(), ClicConstants.DOC_WARRANTY_VALUE).getFilePath() );
+                }else
+                {
+                    startUploadFragment();
                 }
                 break;
         }
+    }
+
+    private void startUploadFragment() {
+
+         AddInvoiceFragment invoiceFragment = new AddInvoiceFragment();
+            Bundle b = new Bundle();
+            b.putString(getString(R.string.activity_type), getString(R.string.activity_upload_docs));
+            b.putParcelable(getString(R.string.user_item), mUserItemsResponse);
+            invoiceFragment.setArguments(b);
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, invoiceFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
+
+
     }
 }

@@ -2,6 +2,9 @@ package com.clic.org.serve.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.PagerAdapter;
@@ -12,6 +15,8 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Base64;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,14 +39,27 @@ import com.clic.org.serve.data.Address;
 import com.clic.org.serve.data.Customer;
 import com.clic.org.serve.data.OTP;
 import com.clic.org.serve.data.OtpValidation;
+import com.clic.org.serve.data.UserItem;
+import com.clic.org.serve.data.UserItemsResponse;
 import com.clic.org.serve.listener.ServiceListener;
 import com.clic.org.serve.services.ServiceConstants;
 import com.clic.org.serve.services.ServiceUtils;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class SignupGuideActvity extends AppCompatActivity {
 
@@ -54,7 +72,7 @@ public class SignupGuideActvity extends AppCompatActivity {
     private View register_layout;
     private EditText inputName, inputEmail, inputPassword,inputMobile;
     private TextInputLayout inputLayoutName, inputLayoutEmail, inputLayoutPassword,inputLayoutMobile;
-    private Button btnAddress,btnFacebook;
+    private Button btnAddress;
     private String SERVICE_TYPE;
     private boolean mobileValidity = false;
     TextView txt_signUp,txt_signup_des,toollBarTitle;
@@ -64,10 +82,29 @@ public class SignupGuideActvity extends AppCompatActivity {
     private ImageView imagLogo;
     Toolbar toolbar;
     boolean singinCheck = true;
+    private UserItem mUserItem;
+    String type="";
+    LoginButton facebookLoginButton;
+    CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+       /* try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.clic.org.serve",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("debug", "keyhash"+Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }*/
         setContentView(R.layout.activity_signup);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -76,14 +113,17 @@ public class SignupGuideActvity extends AppCompatActivity {
         toolbar.setVisibility(View.GONE);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        callbackManager = CallbackManager.Factory.create();
+
         mCustomer = new Customer();
-        if(ClicUtils.readPreference(this,R.string.clic_ClientID) != null)
+        if(ClicUtils.readPreference(this, R.string.clic_ClientID) != null)
         {
             finish();
             Intent knowMore = new Intent(SignupGuideActvity.this,ClicServeHome.class);
             knowMore.putExtra(getString(R.string.activity_type), getString(R.string.activity_know_more));
             startActivity(knowMore);
         }
+
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
         btnSkip = (Button) findViewById(R.id.btn_skip);
@@ -91,7 +131,7 @@ public class SignupGuideActvity extends AppCompatActivity {
         register_layout =(View)findViewById(R.id.layout_register);
         register_layout.setVisibility(View.GONE);
         imagLogo = (ImageView)findViewById(R.id.clic_logo);
-        btnLogin = (Button)findViewById(R.id.btn_login);
+        btnLogin = (Button) findViewById(R.id.btn_login);
 
 
         // layouts of all welcome sliders
@@ -123,11 +163,11 @@ public class SignupGuideActvity extends AppCompatActivity {
         inputMobile = (EditText) register_layout.findViewById(R.id.input_mobile);
         btnRegister = (Button) register_layout.findViewById(R.id.btn_register);
         btnAddress = (Button) register_layout.findViewById(R.id.btn_address);
-        btnFacebook = (Button) register_layout.findViewById(R.id.btn_signInFacebook);
         txt_signUp = (TextView) register_layout.findViewById(R.id.txt_singIN);
         txt_signup_des = (TextView) register_layout.findViewById(R.id.txt_singup_des);
         layoutSignup = (LinearLayout) register_layout.findViewById(R.id.layout_signup);
 
+        facebookLoginButton = (LoginButton)register_layout.findViewById(R.id.login_button);
         btnRegister.setTag(getString(R.string.txt_signin));
         txt_signUp.setTag(getString(R.string.txt_signup));
         txt_signup_des.setText(getString(R.string.txt_signup_des));
@@ -137,6 +177,24 @@ public class SignupGuideActvity extends AppCompatActivity {
         inputEmail.addTextChangedListener(new MyTextWatcher(inputEmail));
         inputPassword.addTextChangedListener(new MyTextWatcher(inputPassword));
 
+        if(getIntent().getExtras() != null)
+        {
+            type = ClicConstants.GUEST_USER;
+            mUserItem = getIntent().getExtras().getParcelable(getString(R.string.user_item));
+            toolbar.setVisibility(View.VISIBLE);
+            dotsLayout.setVisibility(View.INVISIBLE);
+            viewPager.setVisibility(View.GONE);
+            register_layout.setVisibility(View.VISIBLE);
+            inputLayoutName.setVisibility(View.GONE);
+            inputLayoutEmail.setVisibility(View.GONE);
+            //btnAddress.setVisibility(View.GONE);
+            btnSkip.setVisibility(View.INVISIBLE);
+            btnLogin.setVisibility(View.INVISIBLE);
+            btnGuest.setVisibility(View.INVISIBLE);
+            layoutElementsSingUp();
+            singinCheck = false;
+
+        }
         //register_layout.setVisibility(View.GONE);
         inputMobile.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -149,6 +207,47 @@ public class SignupGuideActvity extends AppCompatActivity {
                     }
                 }
                 return false;
+            }
+        });
+        facebookLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(
+                                    JSONObject object,
+                                    GraphResponse response) {
+                                // Application code
+
+                                try {
+                                    inputName.setText(object.getString("name"));
+                                    finish();
+                                    Intent knowMore = new Intent(SignupGuideActvity.this, ClicServeHome.class);
+                                    knowMore.putExtra(getString(R.string.activity_type), getString(R.string.activity_know_more));
+                                    startActivity(knowMore);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,link");
+                request.setParameters(parameters);
+                request.executeAsync();
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
             }
         });
     }
@@ -223,12 +322,13 @@ public class SignupGuideActvity extends AppCompatActivity {
                 inputLayoutName.setVisibility(View.GONE);
                 inputLayoutEmail.setVisibility(View.GONE);
                //btnAddress.setVisibility(View.GONE);
+                layoutOR.setVisibility(View.VISIBLE);
                 btnSkip.setVisibility(View.INVISIBLE);
                 btnLogin.setVisibility(View.INVISIBLE);
                 toollBarTitle.setText(getString(R.string.txt_signin));
                 break;
             case R.id.btn_guest:
-                ClicUtils.createPreferences(getApplicationContext(), getString(R.string.clic_usertype), R.string.clic_guest);
+                ClicUtils.createPreferences(getApplicationContext(), getString(R.string.clic_guest), R.string.clic_usertype);
                 //startActivity(new Intent(SignupGuideActvity.this, MainActivityClic.class));
                 Intent knowMore = new Intent(SignupGuideActvity.this,ClicServeHome.class);
                 knowMore.putExtra(getString(R.string.activity_type), getString(R.string.activity_know_more));
@@ -263,9 +363,6 @@ public class SignupGuideActvity extends AppCompatActivity {
                    layoutElementsSignIn();
                 }
                 break;
-            case R.id.btn_signInFacebook:
-
-                break;
             case R.id.btn_address:
                 ClicUtils.createAddressDialog(this,R.layout.clic_address_layout,mAddress);
                 break;
@@ -279,8 +376,8 @@ public class SignupGuideActvity extends AppCompatActivity {
         inputLayoutName.setVisibility(View.VISIBLE);
         inputLayoutEmail.setVisibility(View.VISIBLE);
        // btnAddress.setVisibility(View.VISIBLE);
-        layoutOR.setVisibility(View.GONE);
-        btnFacebook.setVisibility(View.GONE);
+        layoutOR.setVisibility(View.VISIBLE);
+        facebookLoginButton.setVisibility(View.VISIBLE);
         btnRegister.setTag(getString(R.string.txt_signup));
         txt_signUp.setTag(getString(R.string.txt_signin));
         txt_signup_des.setText(getString(R.string.txt_signin_des));
@@ -299,7 +396,7 @@ public class SignupGuideActvity extends AppCompatActivity {
         inputLayoutEmail.setVisibility(View.GONE);
        // btnAddress.setVisibility(View.GONE);
         layoutOR.setVisibility(View.VISIBLE);
-        btnFacebook.setVisibility(View.VISIBLE);
+        facebookLoginButton.setVisibility(View.VISIBLE);
         btnRegister.setTag(getString(R.string.txt_signin));
         txt_signUp.setTag(getString(R.string.txt_signup));
         txt_signup_des.setText(getString(R.string.txt_signup_des));
@@ -523,11 +620,20 @@ public class SignupGuideActvity extends AppCompatActivity {
         @Override
         public void onServiceResponse(String response) {
 
+            if(response.equalsIgnoreCase("OTP"))
+            {
+                return;
+            }
             if(!SERVICE_TYPE.equalsIgnoreCase(ClicConstants.MOIBILE_CHECK_SERVICE))
             {
                 if(response.contains("errorCode"))
                 {
-                    ClicUtils.displayToast(SignupGuideActvity.this,"Error Response From server");
+                    if(SERVICE_TYPE.equalsIgnoreCase(ClicConstants.CUSTOMER_LOGIN))
+                    {
+                        ClicUtils.displayToast(SignupGuideActvity.this,"Invalid Credentials..");
+                        return;
+                    }
+                    ClicUtils.displayToast(SignupGuideActvity.this, "Error Response From server");
                     return;
                 }
             }
@@ -538,11 +644,25 @@ public class SignupGuideActvity extends AppCompatActivity {
 
                 ClicUtils.createPreferences(getApplicationContext(), inputMobile.getText().toString(), R.string.clic_username);
                 ClicUtils.createPreferences(getApplicationContext(),inputPassword.getText().toString(), R.string.clic_password);
-                ClicUtils.createPreferences(getApplicationContext(),mOtp.getCustomerID(),R.string.clic_ClientID);
-                finish();
-                Intent knowMore = new Intent(SignupGuideActvity.this,ClicServeHome.class);
-                knowMore.putExtra(getString(R.string.activity_type), getString(R.string.activity_know_more));
-                startActivity(knowMore);
+                ClicUtils.createPreferences(getApplicationContext(), mOtp.getCustomerID(), R.string.clic_ClientID);
+                ClicUtils.createPreferences(getApplicationContext(), getString(R.string.clic_guest), R.string.clic_usertype);
+
+
+                if(type.equalsIgnoreCase(ClicConstants.GUEST_USER))
+                {
+                    SERVICE_TYPE = ClicConstants.ADD_PRODUCT_SERVICE;
+                    mUserItem.setCustomerID(mOtp.getCustomerID());
+                    ServiceUtils.postJsonObjectRequest(SignupGuideActvity.this, ServiceConstants.ADD_CUSTOMER_ITEM, myServiceListner, JsonUtils.getJsonString(mUserItem));
+
+
+                }
+                else {
+                    finish();
+                    Intent knowMore = new Intent(SignupGuideActvity.this, ClicServeHome.class);
+                    knowMore.putExtra(getString(R.string.activity_type), getString(R.string.activity_know_more));
+                    startActivity(knowMore);
+
+                }
 
             }
             else if(SERVICE_TYPE.equalsIgnoreCase(ClicConstants.MOIBILE_CHECK_SERVICE) )
@@ -564,10 +684,12 @@ public class SignupGuideActvity extends AppCompatActivity {
                 otpValidation.setCustomerID(mOtp.getCustomerID());
                 SERVICE_TYPE = ClicConstants.OTP_SERVICE;
                 ClicUtils.createPreferences(getApplicationContext(),mOtp.getCustomerID(),R.string.clic_ClientID);
+                ClicUtils.createPreferences(getApplicationContext(), mOtp.getCustomerID(), R.string.clic_usertype);
                 ClicUtils.createOTPValidationDialog(SignupGuideActvity.this,
                         R.layout.otp_validation,
-                        JsonUtils.getJsonString(otpValidation),
-                        myServiceListner);
+                        otpValidation,
+                        myServiceListner,
+                        ClicConstants.DIALOG_TYPE_OTP);
             }
             else if(SERVICE_TYPE.equalsIgnoreCase(ClicConstants.CUSTOMER_LOGIN))
             {
@@ -575,6 +697,7 @@ public class SignupGuideActvity extends AppCompatActivity {
                 try {
                     lobj = new JSONObject(response);
                     ClicUtils.createPreferences(getApplicationContext(),lobj.getString("customerID"),R.string.clic_ClientID);
+                    ClicUtils.createPreferences(getApplicationContext(), lobj.getString("customerID"), R.string.clic_usertype);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -583,6 +706,17 @@ public class SignupGuideActvity extends AppCompatActivity {
                 Intent knowMore = new Intent(SignupGuideActvity.this,ClicServeHome.class);
                 knowMore.putExtra(getString(R.string.activity_type), getString(R.string.activity_know_more));
                 startActivity(knowMore);
+
+            }
+            else if(SERVICE_TYPE.equalsIgnoreCase(ClicConstants.ADD_PRODUCT_SERVICE))
+            {
+                finish();
+                mUserItem.setCustomerID(mOtp.getCustomerID());
+                Intent intent = new Intent(SignupGuideActvity.this, ClicServeHome.class);
+                intent.putExtra(getString(R.string.user_item), mUserItem);
+                intent.putExtra(getString(R.string.activity_type), getString(R.string.product_added_success_status));
+                startActivity(intent);
+                ClicUtils.createPreferences(SignupGuideActvity.this, "true", R.string.is_product_exit);
 
             }
         }
@@ -606,4 +740,10 @@ public class SignupGuideActvity extends AppCompatActivity {
 
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
 }

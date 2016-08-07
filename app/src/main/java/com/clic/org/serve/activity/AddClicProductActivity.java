@@ -1,5 +1,6 @@
 package com.clic.org.serve.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.widget.ProgressBar;
 
 import com.clic.org.R;
 import com.clic.org.serve.Utils.ClicUtils;
+import com.clic.org.serve.constants.ClicConstants;
 import com.clic.org.serve.data.ItemDocs;
 import com.clic.org.serve.data.UserItemsResponse;
 import com.clic.org.serve.fragments.AddInvoiceFragment;
@@ -18,7 +20,7 @@ import com.clic.org.serve.fragments.MyListFragment;
 import com.clic.org.serve.listener.MyEventListener;
 import com.clic.org.serve.listener.ServiceListener;
 
-public class AddClicProductActivity extends AppCompatActivity implements MyListFragment.AddClicProductListener,
+public class AddClicProductActivity extends BaseActiivty implements MyListFragment.AddClicProductListener,
         AddInvoiceFragment.InVoicePathListener{
 
     String inVoice;
@@ -65,40 +67,6 @@ public class AddClicProductActivity extends AppCompatActivity implements MyListF
     {
         mItemDocs = myEventListener.getItemDocs();
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.product_details_and_services, menu);
-
-
-        /*searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));*/
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if(id == android.R.id.home)
-        {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                getSupportFragmentManager().popBackStack();
-
-            } else
-            {
-                finish();
-            }
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
 
 
 

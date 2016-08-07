@@ -37,7 +37,7 @@
         android:layout_gravity="bottom|end"
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
-        fab:fab_addButtonColorNormal="@color/btnbg"
+        fab:fab_addButtonColorNormal="@color/btnbg_transparant"
         fab:fab_addButtonColorPressed="@color/white_pressed"
         fab:fab_addButtonSize="normal"
         fab:fab_addButtonPlusIconColor="@color/half_black"

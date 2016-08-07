@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +34,14 @@ public class BlurActivity extends AppCompatActivity implements FloatingActionsMe
 
         floatingMenu.setOnFloatingActionsMenuUpdateListener(this);
 
-        floatingMenu.toggle();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                floatingMenu.toggle();
+
+            }
+        },300);
 
 
         floatingMenu.setBackgroundColor(Color.TRANSPARENT);
@@ -69,7 +77,7 @@ public class BlurActivity extends AppCompatActivity implements FloatingActionsMe
                 finish();
                 floatingMenu.toggle();
                /* floatingMenu.toggle();
-                Intent intent = new Intent(ClicServeHome.this,UploadDocumentsActivity.class);
+                Intent intent = new Intent(ClicServeHome.this,ClicSettingsActivity.class);
                 intent.putExtra(getString(R.string.user_item), userItemsList.get(position));
                 startActivity(intent);*/
                /* serviceType = ClicConstants.CALLBACK_SERVICE;
@@ -94,7 +102,7 @@ public class BlurActivity extends AppCompatActivity implements FloatingActionsMe
             public void onClick(View v) {
                 floatingMenu.toggle();
                 finish();
-                Support.showConversation(BlurActivity.this);
+               // Support.showConversation(BlurActivity.this);
 
 
             }

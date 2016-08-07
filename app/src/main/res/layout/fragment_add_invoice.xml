@@ -34,14 +34,37 @@
                ></Spinner>
 
         </RelativeLayout>
-        <ImageView
-            android:id="@+id/uploadImage"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+          <ImageView
+            android:id="@+id/uploadImageInvoice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+              android:visibility="gone"
             android:src="@drawable/icn__photo"/>
+            <ImageView
+                android:id="@+id/uploadImageWarranty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:src="@drawable/icn__photo"/>
+            <ImageView
+                android:id="@+id/uploadImageInsurance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:src="@drawable/icn__photo"/>
+        </LinearLayout>
         <TextView
+            android:id="@+id/txt_addphoto"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -84,6 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Item Address"
+            android:visibility="gone"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="10dp"
             style="@style/CodeFont"/>
@@ -94,6 +118,7 @@
             android:orientation="horizontal"
             android:background="@android:color/white"
             android:layout_marginTop="10dp"
+            android:visibility="gone"
             >
             <CheckBox
                 android:id="@+id/addressCheck"
@@ -125,6 +150,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@android:color/white"
+            android:visibility="gone"
             android:layout_marginTop="20dp"
             >
             <TextView
@@ -136,6 +162,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"/>
             <EditText
+
                 android:id="@+id/edt_warranty"
                 android:layout_width="100dp"
                 android:layout_marginRight="10dp"

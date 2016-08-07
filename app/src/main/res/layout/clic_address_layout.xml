@@ -10,22 +10,26 @@
         android:background="@color/colorPrimary"
         android:orientation="horizontal"
         >
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
+        <TextView
+            android:id="@+id/backButton"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
+            android:gravity="center|left"
+            android:text="&lt;"
+            android:textColor="@color/white"
+            android:textSize="40sp"
             />
         <TextView
+            android:id="@+id/txt_heading"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="Address"
-            android:gravity="center_horizontal"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:layout_marginLeft="15dp"
             android:textSize="20sp"
-            android:layout_gravity="center"/>
+            android:gravity="center"/>
     </LinearLayout>
     <EditText
         android:layout_width="match_parent"
@@ -49,6 +53,16 @@
         android:imeOptions="actionNext"
         android:layout_margin="10dp"
         android:layout_gravity="center_horizontal" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editPincode"
+        android:hint="Pincode"
+        android:inputType="number"
+        android:imeOptions="actionDone"
+        android:layout_margin="10dp"
+        android:layout_gravity="right" />
 
     <EditText
         android:layout_width="match_parent"
@@ -79,15 +93,7 @@
         android:layout_margin="10dp"
         android:layout_gravity="center_horizontal" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editPincode"
-        android:hint="Pincode"
-        android:inputType="number"
-        android:imeOptions="actionDone"
-        android:layout_margin="10dp"
-        android:layout_gravity="right" />
+
     <Button
         android:id="@+id/btn_submit"
         android:layout_width="wrap_content"

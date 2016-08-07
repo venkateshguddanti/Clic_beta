@@ -7,7 +7,10 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/item_icon" />
+        android:id="@+id/item_icon"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="10dp"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,7 +18,7 @@
         android:text="Item Name"
         android:id="@+id/item_name"
         style="@style/CodeFont"
-        android:layout_margin="5dp"
+        android:padding="10dp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/item_icon"
         android:layout_toEndOf="@+id/item_icon" />

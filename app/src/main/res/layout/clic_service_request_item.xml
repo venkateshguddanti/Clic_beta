@@ -17,11 +17,10 @@
 
             <ImageView
                 android:layout_width="100dp"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:id="@+id/item_photo"
                 android:layout_margin="5dp"
                 android:layout_centerInParent="true"
-                android:src="@drawable/img__tv"
                 android:layout_alignParentLeft="true"
                 />
 

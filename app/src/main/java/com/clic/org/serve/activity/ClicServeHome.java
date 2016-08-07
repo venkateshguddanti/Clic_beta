@@ -48,7 +48,7 @@ import com.helpshift.support.Support;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClicServeHome extends AppCompatActivity implements FloatingActionsMenu.OnFloatingActionsMenuUpdateListener{
+public class ClicServeHome extends BaseActiivty implements FloatingActionsMenu.OnFloatingActionsMenuUpdateListener{
 
 
     String type;
@@ -63,12 +63,25 @@ public class ClicServeHome extends AppCompatActivity implements FloatingActionsM
     private String serviceType ="";
     RelativeLayout mCoordinatorLayout;
     View myRecyclerVIew;
+    private UserItemsResponse mUserItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_click_home);
 
-        type = getIntent().getExtras().getString(getString(R.string.activity_type));
+        if(getIntent().getExtras() !=null) {
+            type = getIntent().getExtras().getString(getString(R.string.activity_type));
+            mUserItem = getIntent().getParcelableExtra(getString(R.string.user_item));
+            if(type.equalsIgnoreCase(getString(R.string.product_added_success_status)))
+            {
+                Intent intent = new Intent(ClicServeHome.this, ProductDetailsAndServicesActivity.class);
+                intent.putExtra(getString(R.string.user_item), mUserItem);
+                intent.putExtra(getString(R.string.activity_type), "Product Added Successfully!");
+                startActivity(intent);
+            }
+
+
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -124,7 +137,7 @@ public class ClicServeHome extends AppCompatActivity implements FloatingActionsM
                 }
                 else if(type.equalsIgnoreCase(getString(R.string.activity_upload_docs)))
                 {
-                    Intent intent = new Intent(ClicServeHome.this,UploadDocumentsActivity.class);
+                    Intent intent = new Intent(ClicServeHome.this,ClicSettingsActivity.class);
                     intent.putExtra(getString(R.string.user_item), userItemsList.get(position));
                     startActivity(intent);
                 }
@@ -147,32 +160,7 @@ public class ClicServeHome extends AppCompatActivity implements FloatingActionsM
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.product_details_and_services, menu);
 
-
-        /*searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));*/
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if(id == android.R.id.home)
-        {
-            finish();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     ServiceListener mServiceListener =new ServiceListener() {
         @Override
@@ -293,11 +281,12 @@ public class ClicServeHome extends AppCompatActivity implements FloatingActionsM
         }
 
         @Override
-        public void onBindViewHolder(ItemsViewHolder holder, int position) {
+        public void onBindViewHolder(ItemsViewHolder holder, final int position) {
 
             if(type.equalsIgnoreCase(ClicConstants.LISTTYPE_SERVICEREQ_HOME)) {
                 holder.name.setText(items.get(position).getCustomerItemName());
                 holder.description.setText(items.get(position).getStatus());
+                holder.itemPhoto.setBackgroundResource(R.drawable.img__tv);
             }
             else
             {
@@ -308,8 +297,9 @@ public class ClicServeHome extends AppCompatActivity implements FloatingActionsM
 
                 }else
                 {
-                    holder.name.setText(muserList.get(position).getCategoryName());
-                    // holder.description.setText(items.get(position).getStatus());
+                    holder.name.setText(muserList.get(position).getModelNumber());
+                    holder.itemPhoto.setBackgroundResource(R.drawable.img__tv);
+                    holder.description.setText(muserList.get(position).getCategoryName());
                 }
             }
             final int index = position;
@@ -320,6 +310,9 @@ public class ClicServeHome extends AppCompatActivity implements FloatingActionsM
                     if(type.equalsIgnoreCase(ClicConstants.LISTTYPE_SERVICEREQ_HOME))
                     {
 
+                        ClicUtils.createServiceRequestDetailsDialog(ClicServeHome.this,
+                                                           R.layout.layout_servicereq_details,
+                                                           items.get(position));
                     }
                     else
                     {

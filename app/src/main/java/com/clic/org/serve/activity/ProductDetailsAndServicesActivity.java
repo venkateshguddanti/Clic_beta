@@ -18,15 +18,26 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.clic.org.R;
+import com.clic.org.serve.Utils.ClicUtils;
+import com.clic.org.serve.Utils.JsonUtils;
+import com.clic.org.serve.adapters.ItemGridAdapter;
+import com.clic.org.serve.constants.ClicConstants;
+import com.clic.org.serve.data.ServiceRequestAsRespose;
 import com.clic.org.serve.data.UserItemsResponse;
 import com.clic.org.serve.fragments.AddInvoiceFragment;
 import com.clic.org.serve.fragments.MyListFragment;
 import com.clic.org.serve.fragments.ProductDetailsFragment;
+import com.clic.org.serve.listener.ServiceListener;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class ProductDetailsAndServicesActivity extends AppCompatActivity
+public class ProductDetailsAndServicesActivity extends BaseActiivty
         implements
         MyListFragment.AddClicProductListener,AddInvoiceFragment.InVoicePathListener,
         FloatingActionsMenu.OnFloatingActionsMenuUpdateListener{
@@ -36,7 +47,7 @@ public class ProductDetailsAndServicesActivity extends AppCompatActivity
     ImageView productImage;
     FloatingActionsMenu floatingMenu;
 
-
+    String type = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +59,7 @@ public class ProductDetailsAndServicesActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mUserItemsResponse = getIntent().getExtras().getParcelable(getString(R.string.user_item));
+        type = getIntent().getExtras().getString(getString(R.string.activity_type));
 
         productImage = (ImageView) findViewById(R.id.backdrop);
         productImage.setBackgroundResource(R.drawable.img__tv);
@@ -76,7 +88,7 @@ public class ProductDetailsAndServicesActivity extends AppCompatActivity
         bundle.putParcelable(getString(R.string.user_item), mUserItemsResponse);
         if(getIntent().getExtras().getString(getString(R.string.activity_type))!= null)
         {
-           bundle.putString(getString(R.string.activity_type),getIntent().getExtras().getString(getString(R.string.activity_type)));
+           bundle.putString(getString(R.string.activity_type),type);
         }
         productDetailsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.content, productDetailsFragment).addToBackStack(null).commit();
@@ -91,45 +103,21 @@ public class ProductDetailsAndServicesActivity extends AppCompatActivity
 
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.product_details_and_services, menu);
+
+    ServiceListener mServiceListener =new ServiceListener() {
+        @Override
+        public void onServiceResponse(String response) {
 
 
-        /*searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));*/
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if(id == R.id.action_settings)
-        {
-            return true;
-        }
-        else if(id == android.R.id.home)
-        {
-            Log.d("debug", "count" + getSupportFragmentManager().getBackStackEntryCount());
-
-            if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-                getSupportFragmentManager().popBackStack();
-
-            } else
-            {
-                finish();
-            }
         }
 
-        return super.onOptionsItemSelected(item);
-    }
+        @Override
+        public void onServiceError(String response) {
 
+            ClicUtils.displayToast(ProductDetailsAndServicesActivity.this,"Connection Error....!");
+        }
+    };
 
     @Override
     public void onBackPressed() {

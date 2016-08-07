@@ -1,4 +1,5 @@
 <resources>
+    <string name="facebook_app_id">1080149632075467</string>
     <string name="app_name">Clic</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_catogories">Clic Serve</string>
@@ -21,6 +22,7 @@
     <string name="clic_username">UserName</string>
     <string name="clic_password">PassWord</string>
     <string name="clic_ClientID">ClientID</string>
+    <string name="clic_SharedClientID">SharedClientID</string>
     <string name="clic_usertype">userType</string>
     <string name="clic_guest">Guest</string>
     <string name="txt_signup_des">Don\'t have an account?</string>
@@ -67,9 +69,12 @@
     <string name="action_clicafe">Clic Safe</string>
     <string name="action_clicpay">Clic Save</string>
     <string name="action_shareClic">Share Clic</string>
+    <string name="action_sharedProfiles">Shared profile</string>
+    <string name="action_recommendClic">Recommend Clic</string>
     <string name="action_Notifications">Notifications</string>
     <string name="action_Rentals">Rentals</string>
     <string name="action_Home">Home</string>
+    <string name="action_logout">Logout</string>
 
 
     <string name="parcel_products">parcelProducts</string>
@@ -95,4 +100,5 @@
 
     <string name="err_select_documenttype">Please select a document type</string>
     <string name="title_activity_blur">BlurActivity</string>
+    <string name="product_added_success_status">"Product Added Successfully!"</string>
 </resources>

@@ -45,7 +45,7 @@
             android:layout_margin="5dp"
             style="@style/CodeFont"
             android:layout_height="wrap_content"
-            android:text="warrantyDate"/>
+            android:text=""/>
     </RelativeLayout>
     <TextView
         android:layout_width="1dp"
@@ -77,87 +77,10 @@
             android:layout_margin="5dp"
             android:layout_height="wrap_content"
             style="@style/CodeFont"
-            android:text="warrantyDate"/>
+            android:text=""/>
     </RelativeLayout>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".33"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:id="@+id/product_service"
-            android:onClick="onProductClic"
-            >
-            <ImageView
-                android:id="@+id/serviceReq"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/service_request"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/serviceReq"
-                style="@style/CodeFont"
-                android:text="Service\nRequest"
-                android:layout_margin="5dp"
 
-                 />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".33"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:id="@+id/product_info"
-            android:onClick="onProductClic"
-            >
-            <ImageView
-                android:id="@+id/productInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/trouble_shoot"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/productInfo"
-                android:layout_centerInParent="true"
-                android:layout_margin="5dp"
-                style="@style/CodeFont"
-                android:text="Info" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".33"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:id="@+id/product_learn"
-            android:onClick="onProductClic"
-            >
-            <ImageView
-                android:id="@+id/learMore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/product_manual"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/learMore"
-                android:layout_margin="5dp"
-                style="@style/CodeFont"
-                android:text="Learn\nMore"/>
-        </LinearLayout>
-    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -210,6 +133,84 @@
                 android:layout_margin="5dp"
                 style="@style/CodeFont"
                 android:text="Upload\nDocuments"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:id="@+id/product_learn"
+            android:onClick="onProductClic"
+            >
+            <ImageView
+                android:id="@+id/learMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/product_manual"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/learMore"
+                android:layout_margin="5dp"
+                style="@style/CodeFont"
+                android:text="Learn\nMore"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:id="@+id/product_service"
+            android:onClick="onProductClic"
+            >
+            <ImageView
+                android:id="@+id/serviceReq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/service_request"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/serviceReq"
+                style="@style/CodeFont"
+                android:text="Service\nRequest"
+                android:layout_margin="5dp"
+
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:id="@+id/product_info"
+            android:onClick="onProductClic"
+            >
+            <ImageView
+                android:id="@+id/productInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/trouble_shoot"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/productInfo"
+                android:layout_centerInParent="true"
+                android:layout_margin="5dp"
+                style="@style/CodeFont"
+                android:text="Info" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"

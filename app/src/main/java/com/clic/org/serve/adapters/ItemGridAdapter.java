@@ -81,7 +81,7 @@ public class ItemGridAdapter extends BaseAdapter
             itemHolder.itemName.setText("ADD PRODUCT");
 
             // ImageServices.displayImageFromUrl(mContext, mUserItemDocsList.get(position).getFilePath(), itemHolder.itemIcon);
-            itemHolder.itemIcon.setBackgroundResource(R.drawable.add_product_icon);
+            //itemHolder.itemIcon.setBackgroundResource(R.drawable.add_product_icon);
         }
         else
         {

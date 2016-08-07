@@ -124,28 +124,9 @@ public class ProductGridInfoAdapter<T> extends BaseAdapter {
             itemHolder.itemPrice.setText("100");
             itemHolder.itemViews.setText("120");
         }
-        else if(listtype.equalsIgnoreCase(ClicConstants.LISTTYPE_PRODUCTS_HOME))
-        {
-            itemHolder.itemName.setText(listUserItemsResponses.get(position).getModelNumber());
-           // itemHolder.itemIcon.setBackgroundResource(R.drawable.accessories);
-            itemHolder.itemDes.setText("Item Description");
-            itemHolder.itemDate.setVisibility(View.GONE);
-            itemHolder.itemPrice.setText("100");
-            itemHolder.itemViews.setVisibility(View.GONE);
-        }
-        else if(listtype.equalsIgnoreCase(ClicConstants.LISTTYPE_SERVICEREQ_HOME))
-        {
-            itemHolder.itemName.setText(objects.get(position).toString());
-            //itemHolder.itemIcon.setBackgroundResource(R.drawable.accessories);
-            itemHolder.itemDes.setText("Item Description");
-            itemHolder.itemDate.setVisibility(View.GONE);
-            itemHolder.itemPrice.setText("100");
-            itemHolder.itemViews.setVisibility(View.GONE);
-        }
         else if(listtype.equalsIgnoreCase(ClicConstants.LISTTYPE_PRODUCT_CATEGORIES))
         {
             itemHolder.itemName.setText(listCategories.get(position).getCategoryName());
-            //itemHolder.itemIcon.setBackgroundResource(R.drawable.accessories);
             itemHolder.itemDes.setVisibility(View.GONE);
             itemHolder.itemDate.setVisibility(View.GONE);
             itemHolder.itemPrice.setVisibility(View.GONE);

@@ -13,11 +13,14 @@ public class ClicConstants {
     public static final String CUSTOMER_SERVICE="customerService";
     public static final String CUSTOMER_LOGIN="customerLogin";
     public static final String MOIBILE_CHECK_SERVICE="mobileCheck";
-    public static final String CALLBACK_SERVICE="mobileCheck";
+    public static final String CALLBACK_SERVICE="callbackSerivice";
+    public static final String ADD_PRODUCT_SERVICE="AddProduct";
+    public static final String CLIC_PROFILES_SERVICE="Profiles";
+    public static final String CLIC_PROFILE_SHARE="Share";
 
-    public static final String DOC_INVOICE = "invoive";
-    public static final String DOC_WARRANTY= "warranty";
-    public static final String DOC_INSURENCE= "insurence";
+    public static final String DOC_INVOICE = "Invoice";
+    public static final String DOC_WARRANTY= "Warranty";
+    public static final String DOC_INSURENCE= "Insurance";
     public static final String DOC_USER_MANUAL= "insurence";
 
     public static final String DOC_INVOICE_VALUE = "2";
@@ -37,4 +40,13 @@ public class ClicConstants {
     public static final String SERVICE_TYPE_INSTALLATION = "2";
     public static final String SERVICE_TYPE_REPAIR = "3";
     public static final String SERVICE_TYPE_WARRANTYVISIT = "4";
+
+
+    public static final String DIALOG_TYPE_LEARNMORE_LIKE = "dailgoLearnLike";
+    public static final String DIALOG_TYPE_LEARNMORE_DISLIKE = "dailgoLearnDislike";
+    public static final String DIALOG_TYPE_OTP = "dailgoOTP";
+    public static final String DIALOG_TYPE_SHARE = "dailogClicShare";
+    public static final String DIALOG_TYPE_GUEST = "dailogGuest";
+
+    public static final String GUEST_USER = "guestUser";
 }

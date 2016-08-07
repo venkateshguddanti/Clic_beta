@@ -11,6 +11,8 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.clic.org.R;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.helpshift.All;
 import com.helpshift.Core;
 
@@ -41,6 +43,8 @@ public class ClicController extends Application {
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
         Core.init(All.getInstance());
         Core.install(this,
                 getString(R.string.help_shift_apikey),

@@ -23,6 +23,7 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
     UserItemsResponse mUserItemsResponse;
     LinearLayout productInfo,productUploadDOcs,productLearnmore,productServiceReq,productDemoReq,chat;
     TextView txtHint;
+    String type;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,8 +55,15 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
 
         if(getArguments().getString(getString(R.string.activity_type))!= null)
         {
-            txtHint.setVisibility(View.VISIBLE);
-            txtHint.setText(getArguments().getString(getString(R.string.activity_type)));
+            if(getArguments().getString(getString(R.string.activity_type)).equalsIgnoreCase(getString(R.string.activity_upload_docs)))
+            {
+                txtHint.setVisibility(View.VISIBLE);
+                txtHint.setText(getArguments().getString(getString(R.string.activity_type)));
+
+            }else {
+                txtHint.setVisibility(View.VISIBLE);
+                txtHint.setText(getArguments().getString(getString(R.string.activity_type)));
+            }
         }
 
 
@@ -120,7 +128,7 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, productLearnMoreFragment).addToBackStack(null).commit();
                 break;
             case R.id.product_chat:
-                Support.showConversation(getActivity());
+               // Support.showConversation(getActivity());
 
                 break;
         }

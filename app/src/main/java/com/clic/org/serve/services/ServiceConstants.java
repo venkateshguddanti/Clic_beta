@@ -5,7 +5,8 @@ package com.clic.org.serve.services;
  */
 public class ServiceConstants {
 
-    public static String  clicBaseUrl = "http://52.26.255.108:8080/clicservices/rest";
+    //public static String  clicBaseUrl = "http://52.26.255.108:8080/clicservices/rest";
+    public static String  clicBaseUrl = "http://54.245.24.159:8080/clicservices/rest";
     public static String  OTP_VALIDATION = "/customer/otpvalidation";
     public static String  PRODUCTS_REQUEST = "/customer/productslist";
     public static String  MOBILE_VALIDATION = "/customer/checkuserduplicate/";
@@ -25,6 +26,8 @@ public class ServiceConstants {
     public static String  TYPE_OF_REPAIRS= "/customer/typeofrepairs/";
     public static String  TYPE_OF_DOCUMENTS= "/customer/typeodocs/";
     public static String  CLIC_CALLBACK_REQUEST= "/customer/callback/";
+    public static String  CLIC_PROFILES_REQUEST= "/customer/sharedprofiles/";
+    public static String  CLIC_PROFILE_SHARE_REQUEST= "/customer/shareprofile";
 
 
 

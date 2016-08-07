@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.clic.imageservices.model.ImageCaptureType;
 import com.clic.imageservices.ui.GalleryActivityThumbs;
 import com.clic.imageservices.utils.Constants;
@@ -33,6 +34,7 @@ import com.clic.imageservices.utils.ImageServices;
 import com.clic.org.R;
 import com.clic.org.serve.Utils.ClicUtils;
 import com.clic.org.serve.Utils.JsonUtils;
+import com.clic.org.serve.data.Address;
 import com.clic.org.serve.data.RequestType;
 import com.clic.org.serve.data.RequestTypeResponse;
 import com.clic.org.serve.data.ServiceRequest;
@@ -51,12 +53,13 @@ public class ProductServiceScheduler extends Fragment implements View.OnClickLis
         {
 
     ImageView chooseDocument,chooseLocaton;
-    ImageView documentStatus,locationStatus;
-    Button btnSubmit,dateView,timeView;
+    ImageView locationStatus;
+    Button btnSubmit,dateView,timeView,address;
     public static final int DATEPICKER_FRAGMENT=1;
     public static final int READ_REQUEST_CODE=2;
 
     private RelativeLayout layoutUpload;
+    private Address mAddress = new Address();
     Uri imageUri = null;
     String mCurrentPath;
     ServiceRequest mServiceRequest = new ServiceRequest();
@@ -94,6 +97,7 @@ public class ProductServiceScheduler extends Fragment implements View.OnClickLis
 
         layoutUpload = (RelativeLayout)view.findViewById(R.id.layout_imgUpload);
         edt_description = (EditText)view.findViewById(R.id.edt_des);
+        address = (Button)view.findViewById(R.id.btn_ItemAddress);
 
 
         if(type.equalsIgnoreCase(getString(R.string.schedule_reqReq))) {
@@ -117,14 +121,12 @@ public class ProductServiceScheduler extends Fragment implements View.OnClickLis
 
 
         chooseDocument = (ImageView)view.findViewById(R.id.chooseDocument);
-        documentStatus = (ImageView)view.findViewById(R.id.documentStatus);
        /* chooseLocaton = (ImageView)view.findViewById(R.id.gpsLocation);
         locationStatus = (ImageView)view.findViewById(R.id.gpsLocationStatus);*/
         btnSubmit = (Button)view.findViewById(R.id.btn_submit);
 
         chooseDocument.setOnClickListener(this);
        // chooseLocaton.setOnClickListener(this);
-        documentStatus.setOnClickListener(this);
         //locationStatus.setOnClickListener(this);
         dateView = (Button)view.findViewById(R.id.btn_date);
         timeView = (Button)view.findViewById(R.id.btn_time);
@@ -132,6 +134,7 @@ public class ProductServiceScheduler extends Fragment implements View.OnClickLis
         timeView.setOnClickListener(this);
         btnSubmit.setOnClickListener(this);
         btnSubmit.setOnClickListener(this);
+        address.setOnClickListener(this);
 
 
 
@@ -161,9 +164,13 @@ public class ProductServiceScheduler extends Fragment implements View.OnClickLis
             case R.id.chooseDocument:
                 uploadDocument();
                 break;
-            case R.id.documentStatus:
-                break;
             case R.id.btn_submit:
+                if(dateView.getText().toString().length()==4 )
+                {
+                    ClicUtils.displayToast(getActivity()," Date & Time Required to Proceed!");
+                    return;
+                }
+
                 mServiceRequest.setTypeOfRequest(mServiceType.getServiceTypeID());
                 mServiceRequest.setCustomerID(mUserItemsResponse.getCustomerID());
                 mServiceRequest.setCustomerItemID(mUserItemsResponse.getItemID());
@@ -194,13 +201,16 @@ public class ProductServiceScheduler extends Fragment implements View.OnClickLis
                         }, mHour, mMinute, false);
                 timePickerDialog.show();
                 break;
+            case R.id.btn_ItemAddress:
+                ClicUtils.createAddressDialog(getActivity(),R.layout.clic_address_layout,mAddress);
+                break;
         }
     }
 
     public void uploadDocument()
     {
 
-        final CharSequence[] items = {"Camera", "Gallery", "Document"};
+        final CharSequence[] items = {"Camera", "Gallery"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Make Your Selection");
         builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -300,14 +310,18 @@ public class ProductServiceScheduler extends Fragment implements View.OnClickLis
 
     private void udateDocumentValue(ServiceRequest mServiceRequest, String string)
     {
-
         mServiceRequest.setImageString(ClicUtils.convertBitmapToString(string));
+        Glide.with(getActivity())
+                .load(string)
+                .fitCenter()
+                .into(chooseDocument);
 
     }
     @Override
     public void getDataFromPicker(String value) {
 
         dateView.setText(value);
+        mServiceRequest.setScheduledDate(value);
         final Calendar c = Calendar.getInstance();
         int  mHour = c.get(Calendar.HOUR_OF_DAY);
         int mMinute = c.get(Calendar.MINUTE);

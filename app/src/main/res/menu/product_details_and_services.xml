@@ -17,18 +17,33 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
-    <item
+   <!-- <item
         android:id="@+id/action_clicsafe"
         android:orderInCategory="100"
         android:title="@string/action_clicafe"
-        app:showAsAction="never" />
+        app:showAsAction="never" />-->
 
+    <item
+        android:id="@+id/action_clicSharedProfile"
+        android:orderInCategory="100"
+        android:title="@string/action_sharedProfiles"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_clicRecommendClic"
+        android:orderInCategory="100"
+        android:title="@string/action_recommendClic"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_clicshare"
         android:orderInCategory="100"
         android:title="@string/action_shareClic"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_clicLogout"
+        android:orderInCategory="100"
+        android:title="@string/action_logout"
+        app:showAsAction="never" />
+    <!--<item
         android:id="@+id/action_notification"
         android:orderInCategory="100"
         android:title="@string/action_Notifications"
@@ -37,7 +52,7 @@
         android:id="@+id/action_rental"
         android:orderInCategory="100"
         android:title="@string/action_Rentals"
-        app:showAsAction="never" />
+        app:showAsAction="never" />-->
 
 
 

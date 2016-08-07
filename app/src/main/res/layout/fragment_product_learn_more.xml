@@ -79,11 +79,10 @@ SuperFreezing SuperFreezing protects frozen food from defrosting when adding new
             android:background="@android:color/darker_gray"
            android:layout_alignParentTop="true"/>
         <ImageView
-            android:id="@+id/img_heplfull"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/img_like"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_margin="10dp"
-            android:src="@drawable/icn__like"
             android:layout_marginLeft="10dp"
             android:layout_toLeftOf="@+id/divider"
             />
@@ -96,12 +95,11 @@ SuperFreezing SuperFreezing protects frozen food from defrosting when adding new
             android:layout_centerInParent="true"
             android:background="@android:color/darker_gray"/>
         <ImageView
-            android:id="@+id/img_helpless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/img_dislike"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_margin="10dp"
             android:layout_marginRight="10dp"
-            android:src="@drawable/icn__dislike"
             android:layout_toRightOf="@+id/divider"
             />
     </RelativeLayout>

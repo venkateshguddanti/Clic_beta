@@ -15,6 +15,8 @@ import android.widget.ListView;
 import com.clic.org.R;
 import com.clic.org.serve.Utils.ClicUtils;
 import com.clic.org.serve.Utils.JsonUtils;
+import com.clic.org.serve.adapters.ProductGridInfoAdapter;
+import com.clic.org.serve.constants.ClicConstants;
 import com.clic.org.serve.data.Brand;
 import com.clic.org.serve.data.Category;
 import com.clic.org.serve.data.Item;
@@ -74,6 +76,8 @@ public class MyListFragment extends ListFragment implements AdapterView.OnItemCl
     ArrayAdapter adapter;
     RequestTypeResponse mReqestTypeResponse;
     ServiceType mServiceType;
+    ProductGridInfoAdapter mGridInfoAdapter;
+
 
 
     public interface AddClicProductListener
@@ -101,6 +105,7 @@ public class MyListFragment extends ListFragment implements AdapterView.OnItemCl
             muUserItemsResponse = getArguments().getParcelable(getString(R.string.user_item));
         }
         if(type.equalsIgnoreCase(getString(R.string.list_Brand))) {
+            setTitle(getString(R.string.list_Brand));
             ServiceUtils.makeJsonArrayRequest(getActivity(),
                     ServiceConstants.BRANDS_LIST
                     , mServiceListener, null);
@@ -152,6 +157,11 @@ public class MyListFragment extends ListFragment implements AdapterView.OnItemCl
                            mServiceListener,null);
 
         }
+
+    }
+
+    private void setTitle(String string) {
+
 
     }
 
@@ -343,9 +353,10 @@ public class MyListFragment extends ListFragment implements AdapterView.OnItemCl
                 {
                     list.add(b.getCategoryName());
                 }
-                adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,list);
-                adapter.notifyDataSetChanged();
-                setListAdapter(adapter);
+                mGridInfoAdapter = new ProductGridInfoAdapter(getActivity(),listCategory, ClicConstants.LISTTYPE_PRODUCT_CATEGORIES,R.layout.clic_list_container);
+               // adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,list);
+                mGridInfoAdapter.notifyDataSetChanged();
+                setListAdapter(mGridInfoAdapter);
             }
             else if(type.equalsIgnoreCase(getString(R.string.list_Sub_categories)))
             {

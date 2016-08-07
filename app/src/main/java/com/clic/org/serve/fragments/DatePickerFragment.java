@@ -34,8 +34,10 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
         mDateListener = (DateFromPickerListener)getTargetFragment();
 
-        // Create a new instance of DatePickerFragment and return it
-        return new DatePickerDialog(getActivity(),this,year,month,day);
+        // Create a new instance of DatePickerFragment and return
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),this,year,month+1,day);
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis()-1000);
+        return datePickerDialog;
     }
 
 
@@ -43,8 +45,8 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
-        mDateListener.getDataFromPicker(dayOfMonth + "-" + monthOfYear++ + "-" + year);
-        Log.d("debug", "date" + dayOfMonth + "-" + monthOfYear+1 + "-" + year);
+        mDateListener.getDataFromPicker(dayOfMonth + "-" + monthOfYear + "-" + year);
+        Log.d("debug", "date" + dayOfMonth + "-" + monthOfYear + "-" + year);
 
     }
 

@@ -29,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.clic.imageservices.ui.GalleryActivityThumbs;
 import com.clic.org.R;
 import com.clic.imageservices.model.ImageCaptureType;
@@ -37,6 +38,7 @@ import com.clic.imageservices.utils.ImageServices;
 import com.clic.org.serve.Utils.ClicUtils;
 import com.clic.org.serve.Utils.JsonUtils;
 import com.clic.org.serve.activity.ProductDetailsAndServicesActivity;
+import com.clic.org.serve.activity.SignupGuideActvity;
 import com.clic.org.serve.constants.ClicConstants;
 import com.clic.org.serve.data.Address;
 import com.clic.org.serve.data.ItemDocs;
@@ -55,7 +57,7 @@ import java.util.Calendar;
  */
 public class AddInvoiceFragment extends Fragment implements DatePickerFragment.DateFromPickerListener,View.OnClickListener,AdapterView.OnItemSelectedListener{
 
-    ImageView selectDocument;
+    ImageView selectDocumentInvoice,selectDocumentWarranty,selectDocumentInsurance;
     Button btnSubmit;
     Uri imageUri = null;
     String mCurrentPath;
@@ -67,15 +69,13 @@ public class AddInvoiceFragment extends Fragment implements DatePickerFragment.D
     public static final int READ_REQUEST_CODE=2;
     UserItemsResponse mUserItemsResponse = new UserItemsResponse();
     UserItem mUserItem = new UserItem();
-    ItemDocs itemDocInvo = new ItemDocs();
-    ItemDocs itemDocWarranty = new ItemDocs();
-    ItemDocs itemDocInsu = new ItemDocs();
+    ItemDocs itemDoc = new ItemDocs();
+
 
     EditText warrantyYears;
 
     String DOCUMENT_TYPE;
 
-    ArrayList<ItemDocs> itemDocuments = new ArrayList<>();
 
     CheckBox itemCheck;
     Button itemAddress;
@@ -83,7 +83,11 @@ public class AddInvoiceFragment extends Fragment implements DatePickerFragment.D
 
     private Spinner documentTypes;
     private ArrayList<CharSequence> spinnerList = new ArrayList<>();
+    private ArrayList<ItemDocs> documentList = new ArrayList<>();
     private boolean documentTypeSelected = false;
+    private String type = "";
+    private  ArrayAdapter<CharSequence> adapter;
+    private TextView addPhotoText;
     @Override
     public void getDataFromPicker(String value) {
 
@@ -99,7 +103,23 @@ public class AddInvoiceFragment extends Fragment implements DatePickerFragment.D
 
         switch (v.getId())
         {
-            case R.id.uploadImage:
+            case R.id.uploadImageInvoice:
+                if(documentTypeSelected) {
+                    uploadDocument();
+                }else
+                {
+                    ClicUtils.displayToast(getActivity(),getString(R.string.err_select_documenttype));
+                }
+                break;
+            case R.id.uploadImageWarranty:
+                if(documentTypeSelected) {
+                    uploadDocument();
+                }else
+                {
+                    ClicUtils.displayToast(getActivity(),getString(R.string.err_select_documenttype));
+                }
+                break;
+            case R.id.uploadImageInsurance:
                 if(documentTypeSelected) {
                     uploadDocument();
                 }else
@@ -108,9 +128,23 @@ public class AddInvoiceFragment extends Fragment implements DatePickerFragment.D
                 }
                 break;
             case R.id.btn_submit:
-
+                if(dateView.getText().toString().length()==4 )
+                {
+                    ClicUtils.displayToast(getActivity()," Date Required to Proceed!");
+                    return;
+                }
+                else if(ClicUtils.readPreference(getActivity().getApplicationContext(),R.string.clic_usertype).equalsIgnoreCase(getString(R.string.clic_guest)))
+                {
+                    postUserItem(mUserItemsResponse);
+                    Intent intent = new Intent(getActivity(), SignupGuideActvity.class);
+                    intent.putExtra(getString(R.string.user_item),mUserItem);
+                    startActivity(intent);
+                    getActivity().finish();
+                }
+                else {
                     postUserItem(mUserItemsResponse);
                     ServiceUtils.postJsonObjectRequest(getActivity(), ServiceConstants.ADD_CUSTOMER_ITEM, mServiceListener, JsonUtils.getJsonString(mUserItem));
+                }
 
                 break;
             case R.id.btn_date:
@@ -139,10 +173,9 @@ public class AddInvoiceFragment extends Fragment implements DatePickerFragment.D
         mUserItem.setModelNumber(mUserItemsResponse.getModelNumber());
         mUserItem.setProductID(mUserItemsResponse.getProductID());
         mUserItem.setSameAddress("yes");
-        mUserItem.setItemDocs(itemDocuments);
+        mUserItemsResponse.setItemDocs(documentList);
+        mUserItem.setItemDocs(documentList);
         mUserItem.setAddress(mAddress);
-
-
 
 
     }
@@ -152,17 +185,24 @@ public class AddInvoiceFragment extends Fragment implements DatePickerFragment.D
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
         documentTypeSelected = true;
-        switch (position) {
-            case 1:
-                DOCUMENT_TYPE = ClicConstants.DOC_INVOICE;
+        if(spinnerList.get(position).toString().equalsIgnoreCase(ClicConstants.DOC_INVOICE))
+        {
+            DOCUMENT_TYPE = ClicConstants.DOC_INVOICE;
+            selectDocumentInvoice.setVisibility(View.VISIBLE);
+            addPhotoText.setVisibility(View.VISIBLE);
 
-                break;
-            case 3:
-                DOCUMENT_TYPE = ClicConstants.DOC_INSURENCE;
-                break;
-            case 2:
-                DOCUMENT_TYPE = ClicConstants.DOC_WARRANTY;
-                break;
+        }
+        else if(spinnerList.get(position).toString().equalsIgnoreCase(ClicConstants.DOC_WARRANTY))
+        {
+            DOCUMENT_TYPE = ClicConstants.DOC_WARRANTY;
+            selectDocumentWarranty.setVisibility(View.VISIBLE);
+            addPhotoText.setVisibility(View.VISIBLE);
+        }
+        else if(spinnerList.get(position).toString().equalsIgnoreCase(ClicConstants.DOC_INSURENCE))
+        {
+            DOCUMENT_TYPE = ClicConstants.DOC_INSURENCE;
+            selectDocumentInsurance.setVisibility(View.VISIBLE);
+            addPhotoText.setVisibility(View.VISIBLE);
         }
 
     }
@@ -202,27 +242,43 @@ public class AddInvoiceFragment extends Fragment implements DatePickerFragment.D
     private void initWidgets(View view) {
 
         mUserItemsResponse = getArguments().getParcelable(getString(R.string.user_item));
+        documentList = mUserItemsResponse.getItemDocs();
+
+        type = getArguments().getString(getString(R.string.activity_type));
 
         warrantyYears =(EditText)view.findViewById(R.id.edt_warranty);
         btnSubmit = (Button)view.findViewById(R.id.btn_submit);
-        selectDocument = (ImageView)view.findViewById(R.id.uploadImage);
+        selectDocumentInvoice = (ImageView)view.findViewById(R.id.uploadImageInvoice);
+        selectDocumentWarranty = (ImageView)view.findViewById(R.id.uploadImageWarranty);
+        selectDocumentInsurance = (ImageView)view.findViewById(R.id.uploadImageInsurance);
+        addPhotoText = (TextView)view.findViewById(R.id.txt_addphoto);
 
         itemCheck =(CheckBox)view.findViewById(R.id.addressCheck);
         itemAddress = (Button)view.findViewById(R.id.btn_ItemAddress);
         documentTypes = (Spinner)view.findViewById(R.id.spinnerDocuments);
         documentTypes.setOnItemSelectedListener(this);
         spinnerList.add("Select Document");
-        spinnerList.add("Invoice");
-        spinnerList.add("Warranty");
-        spinnerList.add("Insurance");
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getActivity(),android.R.layout.simple_spinner_dropdown_item
+        spinnerList.add(ClicConstants.DOC_INVOICE);
+        spinnerList.add(ClicConstants.DOC_WARRANTY);
+        spinnerList.add(ClicConstants.DOC_INSURENCE);
+        adapter = new ArrayAdapter<CharSequence>(getActivity(),android.R.layout.simple_spinner_dropdown_item
                 ,spinnerList);
         documentTypes.setAdapter(adapter);
 
 
+        if(documentList != null)
+        {
+            updateSpinnerAdapter(documentList);
+        }
+        else
+        {
+            documentList = new ArrayList<>();
+        }
 
         itemAddress.setOnClickListener(this);
-        selectDocument.setOnClickListener(this);
+        selectDocumentInvoice.setOnClickListener(this);
+        selectDocumentWarranty.setOnClickListener(this);
+        selectDocumentInsurance.setOnClickListener(this);
 
         dateView = (Button)view.findViewById(R.id.btn_date);
         dateView.setOnClickListener(this);
@@ -266,6 +322,27 @@ public class AddInvoiceFragment extends Fragment implements DatePickerFragment.D
 
 
 
+    public void updateSpinnerAdapter(ArrayList<ItemDocs> itemDocs)
+    {
+        for(ItemDocs id: itemDocs)
+        {
+            if(id.getDocType().equalsIgnoreCase(ClicConstants.DOC_INVOICE_VALUE))
+            {
+                spinnerList.remove(1);
+                adapter.notifyDataSetChanged();
+            }
+            else if(id.getDocType().equalsIgnoreCase(ClicConstants.DOC_WARRANTY_VALUE))
+            {
+                spinnerList.remove(2);
+                adapter.notifyDataSetChanged();
+            }
+            else if(id.getDocType().equalsIgnoreCase(ClicConstants.DOC_INSURENCE_VALUE))
+            {
+                spinnerList.remove(3);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
 
     public void uploadDocument()
     {
@@ -334,7 +411,8 @@ public class AddInvoiceFragment extends Fragment implements DatePickerFragment.D
                 Toast.makeText(getActivity(), "File Size Shold be less than 1MB" , Toast.LENGTH_SHORT).show();
 
             }else {
-                udateDocumentValue(mUserItemsResponse,data.getExtras().getString(Constants.Gallery.IMAGE_PATH));
+
+                udateDocumentValue(mUserItemsResponse, data.getExtras().getString(Constants.Gallery.IMAGE_PATH));
                 Toast.makeText(getActivity(), "Invoice Uploaded Successfully" + data.getExtras().getString(Constants.Gallery.IMAGE_PATH), Toast.LENGTH_SHORT).show();
             }
 
@@ -348,8 +426,7 @@ public class AddInvoiceFragment extends Fragment implements DatePickerFragment.D
                 Toast.makeText(getActivity(), "File Size Shold be less than 1MB" , Toast.LENGTH_SHORT).show();
 
             }else{
-                udateDocumentValue(mUserItemsResponse,mCurrentPath);
-
+                udateDocumentValue(mUserItemsResponse, mCurrentPath);
                 Toast.makeText(getActivity(), "Invoice Uploaded Successfully" + mCurrentPath, Toast.LENGTH_SHORT).show();
             }
         }
@@ -375,32 +452,73 @@ public class AddInvoiceFragment extends Fragment implements DatePickerFragment.D
         }
     }
 
-    private void udateDocumentValue(UserItemsResponse mUserItemsResponse, String string) {
+    private void udateDocumentValue(UserItemsResponse mUserItemsResponse, String path) {
 
 
         if(DOCUMENT_TYPE.equalsIgnoreCase(ClicConstants.DOC_INVOICE))
         {
-            itemDocInvo.setImageData(ClicUtils.convertBitmapToString(string));
-            itemDocInvo.setDocType(ClicConstants.DOC_INVOICE_VALUE);
-            itemDocuments.add(itemDocInvo);
+            itemDoc.setImageData(ClicUtils.convertBitmapToString(path));
+            itemDoc.setDocType(ClicConstants.DOC_INVOICE_VALUE);
+            documentList.add(itemDoc);
+            itemDoc = new ItemDocs();
+            Glide.with(getActivity())
+                    .load(path)
+                    .fitCenter()
+                    .into(selectDocumentInvoice);
+            selectDocumentInvoice.setClickable(false);
+            removeSpinnerItem(spinnerList);
+            adapter.notifyDataSetChanged();
+            documentTypes.setSelection(0);
+
+
         }
         else if(DOCUMENT_TYPE.equalsIgnoreCase(ClicConstants.DOC_WARRANTY))
         {
-            itemDocWarranty.setDocType(ClicConstants.DOC_WARRANTY_VALUE);
-            itemDocWarranty.setImageData(ClicUtils.convertBitmapToString(string));
-            itemDocuments.add(itemDocWarranty);
+            itemDoc.setDocType(ClicConstants.DOC_WARRANTY_VALUE);
+            itemDoc.setImageData(ClicUtils.convertBitmapToString(path));
+            documentList.add(itemDoc);
+            itemDoc = new ItemDocs();
+            Glide.with(getActivity())
+                    .load(path)
+                    .fitCenter()
+                    .into(selectDocumentWarranty);
+            selectDocumentWarranty.setClickable(false);
+            removeSpinnerItem(spinnerList);
+            adapter.notifyDataSetChanged();
+            documentTypes.setSelection(0);
+
 
         }
         else if(DOCUMENT_TYPE.equalsIgnoreCase(ClicConstants.DOC_INSURENCE))
         {
-            itemDocInsu.setDocType(ClicConstants.DOC_INSURENCE_VALUE);
-            itemDocInsu.setImageData(ClicUtils.convertBitmapToString(string));
-            itemDocuments.add(itemDocInsu);
-
+            itemDoc.setDocType(ClicConstants.DOC_INSURENCE_VALUE);
+            itemDoc.setImageData(ClicUtils.convertBitmapToString(path));
+            documentList.add(itemDoc);
+            itemDoc = new ItemDocs();
+            Glide.with(getActivity())
+                    .load(path)
+                    .fitCenter()
+                    .into(selectDocumentInsurance);
+            selectDocumentInsurance.setClickable(false);
+            removeSpinnerItem(spinnerList);
+            adapter.notifyDataSetChanged();
+            documentTypes.setSelection(0);
         }
 
     }
 
+    private void removeSpinnerItem(ArrayList<CharSequence> spinnerList) {
+
+        for(int i=1;i<spinnerList.size();i++)
+        {
+
+            if(spinnerList.get(i).toString().equalsIgnoreCase(DOCUMENT_TYPE))
+            {
+                spinnerList.remove(i);
+            }
+
+        }
+    }
 
 
     ServiceListener mServiceListener = new ServiceListener() {
@@ -413,15 +531,29 @@ public class AddInvoiceFragment extends Fragment implements DatePickerFragment.D
                 return;
             }
 
-            getActivity().finish();
-            //ClicUtils.createSuccessDialog(getActivity(),R.layout.clic_status,"");
+            if(type !=null && type.equalsIgnoreCase(getString(R.string.activity_upload_docs)))
+            {
+                getActivity().finish();
+                //ClicUtils.createSuccessDialog(getActivity(),R.layout.clic_status,"");
 
-            getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            Intent intent = new Intent(getActivity(),ProductDetailsAndServicesActivity.class);
-            intent.putExtra(getString(R.string.user_item), mUserItemsResponse);
-            intent.putExtra(getString(R.string.activity_type),"Product Added Successfully!");
-            startActivity(intent);
-            ClicUtils.createPreferences(getActivity(), "true", R.string.is_product_exit);
+                getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                Intent intent = new Intent(getActivity(), ProductDetailsAndServicesActivity.class);
+                intent.putExtra(getString(R.string.user_item), mUserItemsResponse);
+                intent.putExtra(getString(R.string.activity_type), "Document Added Successfully !");
+                startActivity(intent);
+            }
+            else
+            {
+                getActivity().finish();
+                //ClicUtils.createSuccessDialog(getActivity(),R.layout.clic_status,"");
+
+                getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                Intent intent = new Intent(getActivity(), ProductDetailsAndServicesActivity.class);
+                intent.putExtra(getString(R.string.user_item), mUserItemsResponse);
+                intent.putExtra(getString(R.string.activity_type), "Product Added Successfully!");
+                startActivity(intent);
+                ClicUtils.createPreferences(getActivity(), "true", R.string.is_product_exit);
+            }
         }
 
         @Override

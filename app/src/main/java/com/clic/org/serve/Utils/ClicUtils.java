@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,11 +14,13 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -34,6 +37,11 @@ import com.bumptech.glide.Glide;
 import com.clic.org.R;
 import com.clic.org.serve.constants.ClicConstants;
 import com.clic.org.serve.data.Address;
+import com.clic.org.serve.data.OTP;
+import com.clic.org.serve.data.OtpValidation;
+import com.clic.org.serve.data.ProfileData;
+import com.clic.org.serve.data.ServiceRequest;
+import com.clic.org.serve.data.ServiceRequestAsRespose;
 import com.clic.org.serve.listener.ServiceListener;
 import com.clic.org.serve.services.ServiceConstants;
 import com.clic.org.serve.services.ServiceUtils;
@@ -51,6 +59,14 @@ public  class ClicUtils {
 
 
 
+    public static void shareClic(Activity activity)
+    {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+        sendIntent.setType("text/plain");
+        activity.startActivity(Intent.createChooser(sendIntent, "send to"));
+    }
     public static void createSuccessDialog(final Activity activity,int layout,final String type)
     {
         final Dialog dialog = new Dialog(activity);
@@ -63,19 +79,108 @@ public  class ClicUtils {
             @Override
             public void onClick(View v) {
 
-                if(type.equalsIgnoreCase(ClicConstants.CALLBACK_SERVICE)) {
-                    activity.finish();
+                if (type.equalsIgnoreCase(ClicConstants.CALLBACK_SERVICE)) {
+                    // activity.finish();
                     dialog.dismiss();
-                }else
-                {
+                } else {
                     dialog.dismiss();
-                    activity.finish();
+                    //activity.finish();
                 }
             }
         });
         // TouchImageView imageView = (TouchImageView)dialog.findViewById(R.id.pinchImage);
 
         dialog.show();
+    }
+    public static void createDialogWithTwoButtons(final Activity activity,int layout,final String type,final ImageView btn)
+    {
+        final Dialog dialog = new Dialog(activity,android.R.style.Theme_Holo_Light_Dialog);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        /*LayoutInflater inflater = (LayoutInflater)activity.getApplicationContext().getSystemService
+                (Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(layout,null);
+        setItemHeightWidthFull(activity,view);*/
+        dialog.setContentView(layout);
+
+        TextView OK = (TextView)dialog.findViewById(R.id.txt_ok);
+        TextView des1 = (TextView)dialog.findViewById(R.id.txt_des1);
+        TextView des2 = (TextView)dialog.findViewById(R.id.txt_des2);
+        TextView des3 = (TextView)dialog.findViewById(R.id.txt_des3);
+        TextView cancel = (TextView)dialog.findViewById(R.id.txt_cancel);
+        EditText comments = (EditText)dialog.findViewById(R.id.edt_commetns);
+
+        if(type.equalsIgnoreCase(ClicConstants.DIALOG_TYPE_LEARNMORE_LIKE))
+        {
+            des1.setText("Thanks For Rating Us");
+            des2.setVisibility(View.GONE);
+            comments.setVisibility(View.GONE);
+            des3.setText("");
+            OK.setText("OK");
+            cancel.setText("Cancel");
+        }
+        else
+        {
+            des1.setText("Thanks For Rating Us");
+            des2.setVisibility(View.GONE);
+            des3.setText("");
+            comments.setVisibility(View.GONE);
+            OK.setText("OK");
+            cancel.setText("Cancel");
+        }
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+                if (type.equalsIgnoreCase(ClicConstants.DIALOG_TYPE_LEARNMORE_LIKE)) {
+                    btn.setBackgroundResource(R.drawable.icn__like);
+                } else {
+                    btn.setBackgroundResource(R.drawable.icn__dislike);
+                }
+
+            }
+        });
+        OK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (type.equalsIgnoreCase(ClicConstants.CALLBACK_SERVICE)) {
+                    dialog.dismiss();
+
+                } else {
+                    dialog.dismiss();
+                }
+            }
+        });
+        // TouchImageView imageView = (TouchImageView)dialog.findViewById(R.id.pinchImage);
+
+        dialog.show();
+    }
+    public static void createServiceRequestDetailsDialog(final Activity activity,int layout,ServiceRequestAsRespose mDetails)
+    {
+        final Dialog dialog = new Dialog(activity,android.R.style.Theme_Holo_Light_NoActionBar);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(layout);
+
+        ImageView icon = (ImageView)dialog.findViewById(R.id.icon);
+        TextView back = (TextView)dialog.findViewById(R.id.backButton);
+        TextView name = (TextView)dialog.findViewById(R.id.modelName);
+        TextView status = (TextView)dialog.findViewById(R.id.reqStatus);
+        TextView comments = (TextView)dialog.findViewById(R.id.reqComments);
+
+        name.setText(mDetails.getCustomerItemName());
+        status.setText(mDetails.getStatus());
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+
     }
     public static void createImagePinchDialog(final Activity activity,int layout,final String path)
     {
@@ -109,7 +214,15 @@ public  class ClicUtils {
         final EditText edtCountry = (EditText)dialog.findViewById(R.id.editCountry);
         final EditText edtPincode = (EditText)dialog.findViewById(R.id.editPincode);
         Button buttonSubmit = (Button)dialog.findViewById(R.id.btn_submit);
+        final TextView back = (TextView)dialog.findViewById(R.id.backButton);
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+            }
+        });
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,7 +273,7 @@ public  class ClicUtils {
         return dialog;
 
     }
-    public static String createOTPValidationDialog(final Activity activity,int layout,final String params,final ServiceListener mListener)
+    public static String createOTPValidationDialog(final Activity activity,int layout,final OtpValidation params,final ServiceListener mListener,final String type)
     {
         final String result = "";
         final Dialog dialog = new Dialog(activity,android.R.style.Theme_Holo_Light_NoActionBar);
@@ -168,24 +281,105 @@ public  class ClicUtils {
         dialog.setContentView(layout);
 
 
+        final LinearLayout layoutOTP =(LinearLayout)dialog.findViewById(R.id.layoutOTP);
         final EditText edtOTP = (EditText)dialog.findViewById(R.id.editTextOtp);
+        final EditText edtOTP1 = (EditText)dialog.findViewById(R.id.editTextOtp1);
+        final EditText edtOTP2 = (EditText)dialog.findViewById(R.id.editTextOtp2);
+        final EditText edtOTP3 = (EditText)dialog.findViewById(R.id.editTextOtp3);
+        final EditText edtMobile = (EditText)dialog.findViewById(R.id.edtMobileNumber);
+        final EditText edtName = (EditText)dialog.findViewById(R.id.edtName);
+        final TextView header = (TextView)dialog.findViewById(R.id.txt_heading);
+        final TextView back = (TextView)dialog.findViewById(R.id.backButton);
+        final TextView title = (TextView)dialog.findViewById(R.id.txt_title);
+        final TextView info = (TextView)dialog.findViewById(R.id.txt_info);
+
+        if(type.equalsIgnoreCase(ClicConstants.DIALOG_TYPE_OTP))
+        {
+            header.setText("Confirm Registration");
+            title.setText("Enter OTP");
+
+        }
+        else if(type.equalsIgnoreCase(ClicConstants.DIALOG_TYPE_GUEST))
+        {
+            header.setText("Add product as a guest");
+            title.setText("Enter Mobile Number");
+        }
+        else if(type.equalsIgnoreCase(ClicConstants.DIALOG_TYPE_SHARE))
+        {
+            header.setText("Share Clic");
+            title.setText("Enter Mobile Number");
+            layoutOTP.setVisibility(View.GONE);
+            edtMobile.setVisibility(View.VISIBLE);
+            edtName.setVisibility(View.VISIBLE);
+            info.setVisibility(View.VISIBLE);
+        }
 
         Button btnSubmit = (Button)dialog.findViewById(R.id.btnValidate);
 
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+            }
+        });
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
-                if (edtOTP.getText().toString().length() == 0) {
+                if (type.equalsIgnoreCase(ClicConstants.DIALOG_TYPE_SHARE)) {
 
-                    ClicUtils.displayToast(activity,"Please Enter Input");
+                    if (edtMobile.getText().toString().length() < 10) {
+                        displayToast(activity, "Mobile number must be 10 digits");
+                        return;
+                    } else if (edtName.getText().toString().length() == 0) {
+                        displayToast(activity, "Please Enter Name..");
+                        return;
+                    } else {
+                        ProfileData profileData = new ProfileData();
+                        profileData.setName(edtName.getText().toString());
+                        profileData.setCustomerId(readPreference(activity, R.string.clic_ClientID));
+                        profileData.setPhonenumber(edtMobile.getText().toString());
+                        ServiceUtils.postJsonObjectRequest(activity,
+                                ServiceConstants.CLIC_PROFILE_SHARE_REQUEST,
+                                mListener,
+                                new Gson().toJson(profileData));
+                        dialog.dismiss();
+                    }
 
-                } else {
-                    dialog.dismiss();
-                    ServiceUtils.postJsonObjectRequest(activity, ServiceConstants.OTP_VALIDATION, mListener, params);
-                    dialog.dismiss();
+                } else if (type.equalsIgnoreCase(ClicConstants.DIALOG_TYPE_OTP)) {
+
+                    String values = edtOTP.getText().toString() + edtOTP1.getText().toString() + edtOTP2.getText().toString()
+                            + edtOTP3.getText().toString();
+
+                    if (!values.equalsIgnoreCase(params.getCustomerOTP())) {
+
+                        displayToast(activity, "OTP is Not matched");
+
+                    } else {
+                        dialog.dismiss();
+                        ServiceUtils.postJsonObjectRequest(activity, ServiceConstants.OTP_VALIDATION, mListener, JsonUtils.getJsonString(params));
+
+                    }
+
+
+                }
+                else if(type.equalsIgnoreCase(ClicConstants.DIALOG_TYPE_GUEST))
+                {
+                    if(edtMobile.getText().toString().length() != 10)
+                    {
+                        displayToast(activity, "Mobile Number Should be 10 digits");
+
+                    }else
+                    {
+                        dialog.dismiss();
+                       /* ServiceUtils.postJsonObjectRequest(activity,
+                                   ServiceConstants.ADD_CUSTOMER_ITEM,
+                                mListener,
+                                JsonUtils.getJsonString());*/
+                    }
                 }
 
 
@@ -252,6 +446,12 @@ public  class ClicUtils {
         editor.commit();
     }
 
+    public static void clearAppPreferences(Context context)
+    {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.clear().commit();
+    }
     public  static String readPreference(Context context,int prefKey)
     {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -359,6 +559,7 @@ public  class ClicUtils {
         mProgress.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         mProgress.setIndeterminate(true);
         mProgress.show();
+        mProgress.setCancelable(false);
         mProgress.setContentView(R.layout.progress);
     }
 
@@ -368,4 +569,35 @@ public  class ClicUtils {
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(ts);
         return telephonyManager.getDeviceId();
     }
+
+    public String getDeviceName() {
+
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+
+        if (model.startsWith(manufacturer)) {
+            return capitalize(model);
+        } else {
+            return capitalize(manufacturer) + " " + model;
+        }
+    }
+
+    public String getAndroidVersion() {
+        return android.os.Build.VERSION.RELEASE;
+    }
+
+    public String capitalize(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) {
+            return s;
+        } else {
+            return Character.toUpperCase(first) + s.substring(1);
+        }
+    }
+
+
+
 }

@@ -2,6 +2,7 @@
 <resources>
 
     <color name="btnbg">#fdab2b</color>
+    <color name="btnbg_transparant">#80fdab2b</color>
     <color name="help_bg">#cc3754</color>
     <color name="fb_btn_bg">#3b5998</color>
     <color name="txt_info_color">#be1e2c</color>

@@ -107,7 +107,7 @@
                 style="@style/CodeFont"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="View Invoice"
+                android:text="Invoice"
                 android:id="@+id/textView2" />
             <ImageView
 
