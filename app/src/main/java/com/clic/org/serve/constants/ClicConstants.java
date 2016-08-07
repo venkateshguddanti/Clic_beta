@@ -8,9 +8,9 @@ public class ClicConstants {
     public static final String DEVICE_WIDTH="width";
     public static final String DEVICE_HEIGHT="height";
     public static final String CLIC_PRODUCTS="products";
-    public static final String CLIC_MENU="menu";
     public static final String OTP_SERVICE="otp";
     public static final String CUSTOMER_SERVICE="customerService";
+    public static final String CUSTOMER_SERVICE_GUEST_FB="customerServiceGuest";
     public static final String CUSTOMER_LOGIN="customerLogin";
     public static final String MOIBILE_CHECK_SERVICE="mobileCheck";
     public static final String CALLBACK_SERVICE="callbackSerivice";
@@ -49,4 +49,5 @@ public class ClicConstants {
     public static final String DIALOG_TYPE_GUEST = "dailogGuest";
 
     public static final String GUEST_USER = "guestUser";
+    public static final String UPDATE_USER = "updateUser";
 }

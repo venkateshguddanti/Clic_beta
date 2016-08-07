@@ -19,14 +19,18 @@ import com.clic.org.serve.fragments.AddInvoiceFragment;
 import com.clic.org.serve.fragments.MyListFragment;
 import com.clic.org.serve.listener.MyEventListener;
 import com.clic.org.serve.listener.ServiceListener;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 public class AddClicProductActivity extends BaseActiivty implements MyListFragment.AddClicProductListener,
-        AddInvoiceFragment.InVoicePathListener{
+        AddInvoiceFragment.InVoicePathListener,
+        FloatingActionsMenu.OnFloatingActionsMenuUpdateListener{
 
     String inVoice;
     ProgressBar mProgress;
     UserItemsResponse mUserItemsResponse = new UserItemsResponse();
     ItemDocs mItemDocs = new ItemDocs();
+    FloatingActionsMenu floatingMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +46,10 @@ public class AddClicProductActivity extends BaseActiivty implements MyListFragme
         toolbar.setTitle("Add Product");
 
 
+        floatingMenu = (FloatingActionsMenu)findViewById(R.id.multiple_actions_menu);
+
+
+        floatingMenu.setOnFloatingActionsMenuUpdateListener(this);
         MyListFragment fragment = new MyListFragment();
         Bundle b = new Bundle();
         b.putString(getString(R.string.list_type),getString(R.string.list_Brand));
@@ -101,5 +109,18 @@ public class AddClicProductActivity extends BaseActiivty implements MyListFragme
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    public void onMenuExpanded() {
+
+        floatingMenu.toggle();
+        startActivity(new Intent(AddClicProductActivity.this, BlurActivity.class));
+
+    }
+
+    @Override
+    public void onMenuCollapsed() {
+
     }
 }

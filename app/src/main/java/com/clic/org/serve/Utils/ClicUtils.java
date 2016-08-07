@@ -37,6 +37,7 @@ import com.bumptech.glide.Glide;
 import com.clic.org.R;
 import com.clic.org.serve.constants.ClicConstants;
 import com.clic.org.serve.data.Address;
+import com.clic.org.serve.data.Customer;
 import com.clic.org.serve.data.OTP;
 import com.clic.org.serve.data.OtpValidation;
 import com.clic.org.serve.data.ProfileData;
@@ -273,6 +274,98 @@ public  class ClicUtils {
         return dialog;
 
     }
+    public static void updateCustomerDetails(final Activity activity,final ServiceListener mListener,final Customer mCustomer)
+    {
+        final Dialog register_layout = new Dialog(activity,android.R.style.Theme_Holo_Light_NoActionBar);
+        register_layout.setContentView(R.layout.layout_register);
+        final EditText inputName, inputEmail, inputPassword,inputMobile;
+        Button btnRegister;
+        inputName = (EditText) register_layout.findViewById(R.id.input_name);
+        inputEmail = (EditText) register_layout.findViewById(R.id.input_email);
+        inputPassword = (EditText) register_layout.findViewById(R.id.input_password);
+        inputMobile = (EditText) register_layout.findViewById(R.id.input_mobile);
+        btnRegister = (Button) register_layout.findViewById(R.id.btn_register);
+
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(inputName.getText().toString().length() == 0
+                        || inputEmail.getText().toString().length() == 0
+                        || inputPassword.getText().toString().length()==0
+                        || inputMobile.getText().toString().length()==0)
+                {
+                    displayToast(activity,"All fileds required to enter");
+                }
+                else
+                {
+                    mCustomer.setCustomerName(inputName.getText().toString());
+                    mCustomer.setPassword(inputPassword.getText().toString());
+                    mCustomer.setEmailID(inputEmail.getText().toString());
+                    mCustomer.setPhoneNumber(inputMobile.getText().toString());
+
+                    register_layout.dismiss();
+                }
+            }
+        });
+
+        register_layout.show();
+    }
+    public static void guestDialogLogin(final Activity activity,int layout,final ServiceListener mListener, final Customer mCustomer)
+    {
+        final Dialog dialog = new Dialog(activity,android.R.style.Theme_Holo_Light_NoActionBar);
+        final boolean flag = false;
+        dialog.setContentView(layout);
+
+
+        final LinearLayout layoutOTP =(LinearLayout)dialog.findViewById(R.id.layoutOTP);
+        final EditText edtMobile = (EditText)dialog.findViewById(R.id.edtMobileNumber);
+        final EditText edtName = (EditText)dialog.findViewById(R.id.edtName);
+        final TextView header = (TextView)dialog.findViewById(R.id.txt_heading);
+        final TextView back = (TextView)dialog.findViewById(R.id.backButton);
+        final TextView title = (TextView)dialog.findViewById(R.id.txt_title);
+        final TextView info = (TextView)dialog.findViewById(R.id.txt_info);
+
+
+            header.setText("Clicserve");
+            title.setText("Enter Mobile Number");
+
+            layoutOTP.setVisibility(View.GONE);
+            edtMobile.setVisibility(View.VISIBLE);
+            edtName.setVisibility(View.GONE);
+            info.setVisibility(View.GONE);
+
+
+        Button btnSubmit = (Button)dialog.findViewById(R.id.btnValidate);
+
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+            }
+        });
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(edtMobile.getText().toString().length() != 10)
+                {
+                    displayToast(activity, "Mobile Number Should be 10 digits");
+
+                }else
+                {
+                    mCustomer.setPhoneNumber(edtMobile.getText().toString());
+                    mCustomer.setPassword(edtMobile.getText().toString());
+                    dialog.dismiss();
+                    ServiceUtils.postJsonObjectRequest(activity,
+                            ServiceConstants.CREATE_CUSTOMER, mListener, JsonUtils.getJsonString(mCustomer));
+                }
+            }
+        });
+
+        dialog.show();
+    }
     public static String createOTPValidationDialog(final Activity activity,int layout,final OtpValidation params,final ServiceListener mListener,final String type)
     {
         final String result = "";
@@ -298,11 +391,6 @@ public  class ClicUtils {
             header.setText("Confirm Registration");
             title.setText("Enter OTP");
 
-        }
-        else if(type.equalsIgnoreCase(ClicConstants.DIALOG_TYPE_GUEST))
-        {
-            header.setText("Add product as a guest");
-            title.setText("Enter Mobile Number");
         }
         else if(type.equalsIgnoreCase(ClicConstants.DIALOG_TYPE_SHARE))
         {
@@ -366,21 +454,7 @@ public  class ClicUtils {
 
 
                 }
-                else if(type.equalsIgnoreCase(ClicConstants.DIALOG_TYPE_GUEST))
-                {
-                    if(edtMobile.getText().toString().length() != 10)
-                    {
-                        displayToast(activity, "Mobile Number Should be 10 digits");
 
-                    }else
-                    {
-                        dialog.dismiss();
-                       /* ServiceUtils.postJsonObjectRequest(activity,
-                                   ServiceConstants.ADD_CUSTOMER_ITEM,
-                                mListener,
-                                JsonUtils.getJsonString());*/
-                    }
-                }
 
 
             }

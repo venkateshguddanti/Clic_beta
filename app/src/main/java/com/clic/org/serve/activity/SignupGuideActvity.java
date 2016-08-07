@@ -76,7 +76,7 @@ public class SignupGuideActvity extends AppCompatActivity {
     private String SERVICE_TYPE;
     private boolean mobileValidity = false;
     TextView txt_signUp,txt_signup_des,toollBarTitle;
-    Customer mCustomer ;
+    Customer mCustomer = new Customer() ;
     OTP mOtp;
     Address mAddress = new Address();
     private ImageView imagLogo;
@@ -225,10 +225,12 @@ public class SignupGuideActvity extends AppCompatActivity {
 
                                 try {
                                     inputName.setText(object.getString("name"));
-                                    finish();
-                                    Intent knowMore = new Intent(SignupGuideActvity.this, ClicServeHome.class);
-                                    knowMore.putExtra(getString(R.string.activity_type), getString(R.string.activity_know_more));
-                                    startActivity(knowMore);
+                                    SERVICE_TYPE = ClicConstants.CUSTOMER_SERVICE_GUEST_FB;
+                                    mCustomer.setCustomerName(inputName.getText().toString());
+                                    ClicUtils.guestDialogLogin(SignupGuideActvity.this,
+                                            R.layout.otp_validation, myServiceListner,
+                                            mCustomer);
+
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -328,11 +330,13 @@ public class SignupGuideActvity extends AppCompatActivity {
                 toollBarTitle.setText(getString(R.string.txt_signin));
                 break;
             case R.id.btn_guest:
-                ClicUtils.createPreferences(getApplicationContext(), getString(R.string.clic_guest), R.string.clic_usertype);
+                SERVICE_TYPE = ClicConstants.CUSTOMER_SERVICE_GUEST_FB;
+                ClicUtils.guestDialogLogin(this,
+                        R.layout.otp_validation,
+                        myServiceListner,
+                        mCustomer);
                 //startActivity(new Intent(SignupGuideActvity.this, MainActivityClic.class));
-                Intent knowMore = new Intent(SignupGuideActvity.this,ClicServeHome.class);
-                knowMore.putExtra(getString(R.string.activity_type), getString(R.string.activity_know_more));
-                startActivity(knowMore);
+
                 break;
             case R.id.btn_register:
                 if(btnRegister.getTag().toString().equalsIgnoreCase(getString(R.string.txt_signup))) {
@@ -645,7 +649,6 @@ public class SignupGuideActvity extends AppCompatActivity {
                 ClicUtils.createPreferences(getApplicationContext(), inputMobile.getText().toString(), R.string.clic_username);
                 ClicUtils.createPreferences(getApplicationContext(),inputPassword.getText().toString(), R.string.clic_password);
                 ClicUtils.createPreferences(getApplicationContext(), mOtp.getCustomerID(), R.string.clic_ClientID);
-                ClicUtils.createPreferences(getApplicationContext(), getString(R.string.clic_guest), R.string.clic_usertype);
 
 
                 if(type.equalsIgnoreCase(ClicConstants.GUEST_USER))
@@ -690,6 +693,19 @@ public class SignupGuideActvity extends AppCompatActivity {
                         otpValidation,
                         myServiceListner,
                         ClicConstants.DIALOG_TYPE_OTP);
+            }
+            else if(SERVICE_TYPE.equalsIgnoreCase(ClicConstants.CUSTOMER_SERVICE_GUEST_FB))
+            {
+                ClicUtils.createPreferences(getApplicationContext(), getString(R.string.clic_guest), R.string.clic_usertype);
+                OtpValidation otpValidation = new OtpValidation();
+                otpValidation.setCustomerOTP(mOtp.getOtpNum());
+                otpValidation.setCustomerID(mOtp.getCustomerID());
+                ClicUtils.createPreferences(getApplicationContext(), mOtp.getCustomerID(), R.string.clic_ClientID);
+               // ClicUtils.createPreferences(getApplicationContext(), mOtp.getCustomerID(), R.string.clic_usertype);
+                Intent knowMore = new Intent(SignupGuideActvity.this, ClicServeHome.class);
+                knowMore.putExtra(getString(R.string.activity_type), getString(R.string.activity_know_more));
+                startActivity(knowMore);
+
             }
             else if(SERVICE_TYPE.equalsIgnoreCase(ClicConstants.CUSTOMER_LOGIN))
             {

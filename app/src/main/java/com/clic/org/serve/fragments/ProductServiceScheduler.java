@@ -34,7 +34,10 @@ import com.clic.imageservices.utils.ImageServices;
 import com.clic.org.R;
 import com.clic.org.serve.Utils.ClicUtils;
 import com.clic.org.serve.Utils.JsonUtils;
+import com.clic.org.serve.activity.SignupGuideActvity;
+import com.clic.org.serve.constants.ClicConstants;
 import com.clic.org.serve.data.Address;
+import com.clic.org.serve.data.Customer;
 import com.clic.org.serve.data.RequestType;
 import com.clic.org.serve.data.RequestTypeResponse;
 import com.clic.org.serve.data.ServiceRequest;
@@ -72,6 +75,7 @@ public class ProductServiceScheduler extends Fragment implements View.OnClickLis
             UserItemsResponse mUserItemsResponse;
 
             String type;
+            String SERVICE_TYPE;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -165,17 +169,29 @@ public class ProductServiceScheduler extends Fragment implements View.OnClickLis
                 uploadDocument();
                 break;
             case R.id.btn_submit:
+                mServiceRequest.setTypeOfRequest(mServiceType.getServiceTypeID());
+                mServiceRequest.setCustomerID(mUserItemsResponse.getCustomerID());
+                mServiceRequest.setCustomerItemID(mUserItemsResponse.getItemID());
                 if(dateView.getText().toString().length()==4 )
                 {
                     ClicUtils.displayToast(getActivity()," Date & Time Required to Proceed!");
                     return;
                 }
+                else if(ClicUtils.readPreference(getActivity().getApplicationContext(),R.string.clic_usertype).equalsIgnoreCase(getString(R.string.clic_guest)))
+                {
+                    SERVICE_TYPE = ClicConstants.UPDATE_USER;
+                    ClicUtils.updateCustomerDetails(getActivity(),
+                                            mServiceListener,
+                                             new Customer());
+                   /* ServiceUtils.postJsonObjectRequest(getActivity(),
+                            ServiceConstants.SERVICE_SCHEDULE, mServiceListener, JsonUtils.getJsonString(mServiceRequest));
+*/
+                }
+                else {
 
-                mServiceRequest.setTypeOfRequest(mServiceType.getServiceTypeID());
-                mServiceRequest.setCustomerID(mUserItemsResponse.getCustomerID());
-                mServiceRequest.setCustomerItemID(mUserItemsResponse.getItemID());
-                ServiceUtils.postJsonObjectRequest(getActivity(),
-                        ServiceConstants.SERVICE_SCHEDULE,mServiceListener, JsonUtils.getJsonString(mServiceRequest));
+                    ServiceUtils.postJsonObjectRequest(getActivity(),
+                            ServiceConstants.SERVICE_SCHEDULE, mServiceListener, JsonUtils.getJsonString(mServiceRequest));
+                }
                 break;
             case R.id.btn_date:
                 DialogFragment newFragment = new DatePickerFragment();

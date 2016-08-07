@@ -133,14 +133,6 @@ public class AddInvoiceFragment extends Fragment implements DatePickerFragment.D
                     ClicUtils.displayToast(getActivity()," Date Required to Proceed!");
                     return;
                 }
-                else if(ClicUtils.readPreference(getActivity().getApplicationContext(),R.string.clic_usertype).equalsIgnoreCase(getString(R.string.clic_guest)))
-                {
-                    postUserItem(mUserItemsResponse);
-                    Intent intent = new Intent(getActivity(), SignupGuideActvity.class);
-                    intent.putExtra(getString(R.string.user_item),mUserItem);
-                    startActivity(intent);
-                    getActivity().finish();
-                }
                 else {
                     postUserItem(mUserItemsResponse);
                     ServiceUtils.postJsonObjectRequest(getActivity(), ServiceConstants.ADD_CUSTOMER_ITEM, mServiceListener, JsonUtils.getJsonString(mUserItem));
